@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活動時間軸</title>
+<style>
+  /* ====== 可依需求微調的基本樣式 ====== */
+  #poTimelineRoot, #poTimelineRoot * { box-sizing: border-box; }
+  #poTimelineRoot {
+    font-family: "PingFang TC","Microsoft JhengHei","Heiti TC","Noto Sans TC",Helvetica,Arial,sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+    color: #222;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Tabs（純 CSS radio 切換，不依賴 JavaScript 執行） ---- */
+  #poTimelineRoot .po-tab-radio { display: none; }
+  #poTimelineRoot .po-tab-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  #poTimelineRoot .po-tab-label {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    padding: 10px 26px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    opacity: 0.6;
+    transform: scale(0.97);
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  #poTimelineRoot .po-tab-label[for="poTab1"] { background: #f2a20c; color: #fff; }
+  #poTimelineRoot .po-tab-label[for="poTab2"] { background: #f6cee0; color: #c14a83; }
+  #poTimelineRoot .po-tab-label[for="poTab3"] { background: #1c8a3a; color: #fff; }
+
+  #poTimelineRoot .po-panels {
+    margin-top: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #poTimelineRoot .po-panel { display: none; }
+  #poTimelineRoot .po-inner {
+    padding-bottom: 20px;
+  }
+
+  #poTab1:checked ~ .po-tab-bar label[for="poTab1"],
+  #poTab2:checked ~ .po-tab-bar label[for="poTab2"],
+  #poTab3:checked ~ .po-tab-bar label[for="poTab3"] {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  #poTab1:checked ~ .po-panels #poPanel1,
+  #poTab2:checked ~ .po-panels #poPanel2,
+  #poTab3:checked ~ .po-panels #poPanel3 {
+    display: block;
+  }
+
+  /* ---- 單一場地面板 ---- */
+  #poTimelineRoot .po-scroll {
+    overflow: hidden;
+  }
+  #poTimelineRoot .po-inner {
+    width: 100%;
+  }
+  #poTimelineRoot .po-title-bar {
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 10px 8px;
+    letter-spacing: 1px;
+  }
+  #poTimelineRoot .po-sub-bar {
+    height: 10px;
+  }
+  #poTimelineRoot .po-head-row {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+  }
+  #poTimelineRoot .po-head-axis {
+    flex: none;
+    width: 64px;
+  }
+  #poTimelineRoot .po-head-col {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 8px 6px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.35);
+  }
+  #poTimelineRoot .po-head-col:last-child { border-right: none; }
+  #poTimelineRoot .po-head-col.po-plain {
+    background: #fff;
+    color: #222;
+    border-right: 1px solid #eee;
+    border-bottom: 3px solid var(--po-theme);
+  }
+  #poTimelineRoot .po-head-col.po-colored {
+    color: #fff;
+  }
+  #poTimelineRoot .po-head-name {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  #poTimelineRoot .po-head-sub {
+    font-size: 12px;
+    margin-top: 2px;
+    opacity: 0.95;
+  }
+  #poTimelineRoot .po-head-tag {
+    font-size: 11px;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+  #poTimelineRoot .po-head-col.po-plain .po-head-tag {
+    color: var(--po-theme);
+    opacity: 1;
+  }
+  #poTimelineRoot .po-body-row {
+    display: flex;
+    position: relative;
+    margin-top: 8px;
+  }
+  #poTimelineRoot .po-axis {
+    flex: none;
+    width: 64px;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 3;
+    border-right: 1px solid #eee;
+  }
+  #poTimelineRoot .po-axis-label {
+    position: absolute;
+    left: 0;
+    right: 6px;
+    text-align: right;
+    font-size: 11px;
+    color: #888;
+    transform: translateY(-50%);
+  }
+  #poTimelineRoot .po-columns {
+    flex: 1;
+    display: flex;
+    position: relative;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      #eee 0,
+      #eee 1px,
+      transparent 1px,
+      transparent var(--po-hour-px)
+    );
+  }
+  #poTimelineRoot .po-col {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    border-right: 1px solid #f0f0f0;
+  }
+  #poTimelineRoot .po-col:last-child { border-right: none; }
+  #poTimelineRoot .po-event {
+    position: absolute;
+    border-radius: 6px;
+    padding: 6px 7px 5px;
+    overflow: hidden;
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+  #poTimelineRoot .po-event.po-light {
+    background: var(--po-bg);
+    border-left: 3px solid var(--po-color);
+    color: #333;
+  }
+  #poTimelineRoot .po-event.po-solid {
+    background: var(--po-color);
+    color: #fff;
+  }
+  #poTimelineRoot .po-event-time {
+    font-weight: 700;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  #poTimelineRoot .po-event.po-solid .po-event-time { opacity: 0.9; }
+  #poTimelineRoot .po-event-title {
+    font-weight: 700;
+    font-size: 12.5px;
+  }
+  #poTimelineRoot .po-event-lines {
+    margin: 3px 0 0;
+    padding-left: 13px;
+    font-size: 10.5px;
+    line-height: 1.28;
+  }
+  #poTimelineRoot .po-event-lines li {
+    margin-bottom: 0;
+  }
+  #poTimelineRoot .po-event-tag {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    font-size: 9.5px;
+    background: rgba(255,255,255,0.85);
+    color: #333;
+    border-radius: 10px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  #poTimelineRoot .po-event.po-solid .po-event-tag {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+  }
+  #poTimelineRoot .po-note {
+    font-size: 11px;
+    color: #999;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div id="poTimelineRoot">
+
+  <input type="radio" name="poTab" id="poTab1" class="po-tab-radio" checked>
+  <input type="radio" name="poTab" id="poTab2" class="po-tab-radio">
+  <input type="radio" name="poTab" id="poTab3" class="po-tab-radio">
+
+  <div class="po-tab-bar" id="poTabBar"></div>
+
+  <div class="po-panels" id="poPanels"></div>
+
+  <p class="po-note">
+    ＊資料為依提供圖片盡力轉錄，部分文字辨識不易，請自行核對修改。
+    「凱達格蘭大道」「總統府北廣場」兩個場地目前資料尚未完工，故統一先將時間軸上限抓到 16:00；
+    原圖片中超過 16:00 的活動（例如北廣場「電力補給站」「行動攝影棚」「自由遊戲基地」原標示到 17:00、
+    以及「DJ 放電」16:00-16:20）已先暫時裁切在 16:00，待資料確定後再請告知，我會幫您調整回正確時間。
+    北廣場最右側圖片有出現「›」箭頭，可能還有更多場地欄位未擷取到，如有需要請提供完整圖片。
+  </p>
+</div>
+
+<script>
+(function () {
+  // ============================================================
+  // 在這裡編輯資料即可：新增/刪除場地(venues)、新增/刪除場館(columns)、新增/刪除事件(events)
+  // start / end 格式為 "HH:MM"（24小時制）
+  // type: "solid" 整塊實心色，省略則為淺色卡片樣式（border+淺底）
+  // tag: 右上角小標籤文字，可放 emoji，例如 "📡 線上直播"
+  // lines: 事件卡片內的條列說明（陣列，選填）
+  // headerStyle: "colored"（各欄自己的顏色當底色，如總統府）或 "plain"（白底黑字，只有下方色條，如凱道/北廣場）
+  // ============================================================
+  var venuesData = [
+    {
+      id: "poPanel1",
+      tabId: "poTab1",
+      tabLabel: "總統府",
+      venueName: "總統府",
+      dayStart: "09:00",
+      dayEnd: "16:00",
+      titleColor: "#f2a20c",
+      headerStyle: "colored",
+      showSubBar: false,
+      columns: [
+        {
+          name: "南苑", color: "#2f6fb3",
+          subtitle: "凱風卡瑪與貴之森", tag: "閱讀好時光",
+          events: [
+            { start: "10:30", end: "11:00", title: "環境部長 彭啟明" },
+            { start: "11:30", end: "12:00", title: "挑戰 × 陳培瑜" },
+            { start: "12:00", end: "12:30", title: "親子天下 小行星" },
+            { start: "13:00", end: "13:30", title: "客委會主委 古秀妃" },
+            { start: "14:00", end: "14:30", title: "林小丰" },
+            { start: "15:00", end: "15:30", title: "陳培瑜" }
+          ]
+        },
+        {
+          name: "北苑", color: "#e8720c",
+          subtitle: "火柴貓防災大作戰", tag: "防災好時光",
+          events: [
+            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰", type: "solid" }
+          ]
+        },
+        {
+          name: "新聞中心", color: "#1f9d55",
+          subtitle: "今天遇見誰", tag: "好奇好時光",
+          events: [
+            { start: "09:00", end: "16:00", title: "今天遇見誰", type: "solid", tag: "📡 線上直播" }
+          ]
+        },
+        {
+          name: "大禮堂", color: "#d9534f",
+          subtitle: "親子電影院 × 兒童電音派對", tag: "放電好時光",
+          events: [
+            { start: "10:00", end: "11:00", title: "兒童氣候變遷高峰論壇", tag: "📡 線上直播" },
+            {
+              start: "13:30", end: "14:50", title: "親子電影院", tag: "✏️ 匿名",
+              lines: [
+                "情境化：選擇的祕密",
+                "登山嚮導員：男子孩的百岳比賽",
+                "我的小樹超人",
+                "你歌do 我歌si"
+              ]
+            },
+            { start: "15:00", end: "15:30", title: "兒童電音派對" }
+          ]
+        },
+        {
+          name: "敵廳", color: "#6a4fa0",
+          subtitle: "兒童聯歡表演", tag: "",
+          events: [
+            { start: "10:00", end: "10:45", title: "冠軍幼兒園 中寮｜勇敢的山羌獵人" },
+            { start: "11:00", end: "11:45", title: "金華國小｜有時天糖有時雨 合唱" },
+            { start: "13:00", end: "13:45", title: "音樂同萌｜如果受了傷" },
+            { start: "14:00", end: "14:45", title: "幸安國小合唱團｜你好緊張" },
+            { start: "15:00", end: "15:45", title: "士林裸摔哥｜虎姑婆" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "poPanel2",
+      tabId: "poTab2",
+      tabLabel: "凱達格蘭大道",
+      venueName: "凱達格蘭大道（公園路至重慶南路段）",
+      dayStart: "10:00",
+      dayEnd: "16:00",
+      titleColor: "#d1668f",
+      headerStyle: "plain",
+      showSubBar: true,
+      columns: [
+        {
+          name: "氣候變遷小學堂", color: "#d1668f",
+          tag: "氣候好時光",
+          events: [
+            { start: "10:00", end: "11:00", title: "硬派卡兒本交通培力工作坊①", tag: "✏️ 需報名", type: "solid" },
+            { start: "11:20", end: "12:20", title: "硬派卡兒本交通培力工作坊②", tag: "✏️ 需報名", type: "solid" },
+            { start: "14:00", end: "15:00", title: "氣候變遷 × 山林戶外講座", tag: "✏️ 需報名", type: "solid" }
+          ]
+        },
+        {
+          name: "我的街道我設計", color: "#d1668f",
+          tag: "移動好時光",
+          events: []
+        },
+        {
+          name: "全民運動基地", color: "#d1668f",
+          tag: "跑跳好時光",
+          events: [
+            { start: "10:00", end: "11:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" },
+            { start: "11:00", end: "12:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" },
+            { start: "12:00", end: "13:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" },
+            { start: "13:00", end: "14:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" },
+            { start: "14:00", end: "15:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" },
+            { start: "15:00", end: "16:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "🎫 現場自由參加", type: "solid" }
+          ]
+        },
+        {
+          name: "自由遊戲基地", color: "#d1668f",
+          tag: "跑跳好時光",
+          events: [
+            { start: "10:00", end: "16:00", title: "自由遊戲基地（原圖標示至17:00，暫裁切）", type: "solid" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "poPanel3",
+      tabId: "poTab3",
+      tabLabel: "總統府北廣場",
+      venueName: "總統府北廣場",
+      dayStart: "10:00",
+      dayEnd: "16:00",
+      titleColor: "#1c8a3a",
+      headerStyle: "plain",
+      showSubBar: true,
+      columns: [
+        {
+          name: "舞台區", color: "#1c8a3a",
+          tag: "",
+          events: [
+            { start: "11:00", end: "12:00", title: "兒童氣候變遷高峰會直播", type: "solid" },
+            { start: "12:30", end: "13:30", title: "天馬劇團", type: "solid" },
+            { start: "14:00", end: "15:30", title: "戶外電影院", type: "solid" },
+            { start: "15:30", end: "16:00", title: "學學堂學具", type: "solid" }
+          ]
+        },
+        {
+          name: "客庄市場好玩", color: "#1c8a3a",
+          tag: "飲食好時光",
+          events: [
+            { start: "10:30", end: "12:00", title: "客庄兒童市集開市", tag: "✏️ 需報名", type: "solid" },
+            { start: "12:30", end: "14:00", title: "客庄兒童市集開市", tag: "✏️ 需報名", type: "solid" },
+            { start: "14:30", end: "16:00", title: "客庄兒童市集開市", tag: "✏️ 需報名", type: "solid" }
+          ]
+        },
+        {
+          name: "行動攝影棚", color: "#1c8a3a",
+          tag: "逛街好時光",
+          events: [
+            { start: "10:00", end: "16:00", title: "行動攝影棚（原圖標示至17:00，暫裁切）", type: "solid" }
+          ]
+        },
+        {
+          name: "小老闆市集", color: "#1c8a3a",
+          tag: "逛街好時光",
+          events: [
+            { start: "10:00", end: "12:30", title: "小老闆市集", type: "solid" },
+            { start: "13:30", end: "16:00", title: "小老闆市集", type: "solid" }
+          ]
+        },
+        {
+          name: "資源循環維修站", color: "#1c8a3a",
+          tag: "省電好時光",
+          events: []
+        },
+        {
+          name: "電力補給站", color: "#1c8a3a",
+          tag: "省電好時光",
+          events: [
+            { start: "10:00", end: "16:00", title: "電力補給站（原圖標示至17:00，暫裁切）", type: "solid" },
+            { start: "14:00", end: "16:00", title: "小家電維修", tag: "✏️ 需報名", type: "solid" }
+          ]
+        }
+      ]
+    }
+  ];
+
+  // ============================================================
+  // 版面參數
+  // ============================================================
+  var PX_PER_HOUR = 108; // 每小時的像素高度，可調整整體時間軸的疏密
+
+  // ---- 工具函式 ----
+  function toMinutes(hhmm) {
+    var parts = hhmm.split(":").map(Number);
+    return parts[0] * 60 + parts[1];
+  }
+
+  function fmtRange(start, end) {
+    return start + "–" + end;
+  }
+
+  function hexToRgba(hex, alpha) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) {
+      h = h.split("").map(function (c) { return c + c; }).join("");
+    }
+    var r = parseInt(h.substring(0, 2), 16);
+    var g = parseInt(h.substring(2, 4), 16);
+    var b = parseInt(h.substring(4, 6), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+  }
+
+  // 為同一欄位裡有時間重疊的事件安排「並排欄位(lane)」，避免互相蓋住
+  function assignLanes(events) {
+    var sorted = events.slice().sort(function (a, b) {
+      return toMinutes(a.start) - toMinutes(b.start);
+    });
+    var laneEndMinutes = [];
+    sorted.forEach(function (ev) {
+      var s = toMinutes(ev.start);
+      var e = toMinutes(ev.end);
+      var placed = false;
+      for (var i = 0; i < laneEndMinutes.length; i++) {
+        if (s >= laneEndMinutes[i]) {
+          ev._lane = i;
+          laneEndMinutes[i] = e;
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        ev._lane = laneEndMinutes.length;
+        laneEndMinutes.push(e);
+      }
+    });
+    var totalLanes = Math.max(1, laneEndMinutes.length);
+    sorted.forEach(function (ev) { ev._totalLanes = totalLanes; });
+    return sorted;
+  }
+
+  function el(tag, className, text) {
+    var e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function buildPanel(venue) {
+    var panel = el("div", "po-panel");
+    panel.id = venue.id;
+
+    var scrollWrap = el("div", "po-scroll");
+    var inner = el("div", "po-inner");
+
+    var titleBar = el("div", "po-title-bar", venue.venueName + " ｜ " + venue.dayStart + "-" + venue.dayEnd);
+    titleBar.style.background = venue.titleColor;
+    inner.appendChild(titleBar);
+
+    if (venue.showSubBar) {
+      var subBar = el("div", "po-sub-bar");
+      subBar.style.background = venue.titleColor;
+      inner.appendChild(subBar);
+    }
+
+    // 欄位標題
+    var headRow = el("div", "po-head-row");
+    headRow.appendChild(el("div", "po-head-axis"));
+    venue.columns.forEach(function (col) {
+      var headCol = el("div", "po-head-col " + (venue.headerStyle === "plain" ? "po-plain" : "po-colored"));
+      if (venue.headerStyle === "plain") {
+        headCol.style.setProperty("--po-theme", col.color);
+      } else {
+        headCol.style.background = col.color;
+      }
+      headCol.appendChild(el("div", "po-head-name", col.name));
+      if (col.subtitle) headCol.appendChild(el("div", "po-head-sub", col.subtitle));
+      if (col.tag) headCol.appendChild(el("div", "po-head-tag", "｜" + col.tag + "｜"));
+      headRow.appendChild(headCol);
+    });
+    inner.appendChild(headRow);
+
+    // 內文（時間軸 + 事件）
+    var bodyRow = el("div", "po-body-row");
+    var dayStartMin = toMinutes(venue.dayStart);
+    var dayEndMin = toMinutes(venue.dayEnd);
+    var totalMinutes = dayEndMin - dayStartMin;
+    var pxPerMinute = PX_PER_HOUR / 60;
+    var totalHeight = totalMinutes * pxPerMinute;
+
+    var axis = el("div", "po-axis");
+    axis.style.height = totalHeight + "px";
+    for (var m = dayStartMin; m <= dayEndMin; m += 60) {
+      var hh = Math.floor(m / 60), mm = m % 60;
+      var label = el("div", "po-axis-label", (hh < 10 ? "0" + hh : hh) + ":" + (mm === 0 ? "00" : mm));
+      label.style.top = ((m - dayStartMin) * pxPerMinute) + "px";
+      axis.appendChild(label);
+    }
+    bodyRow.appendChild(axis);
+
+    var columnsWrap = el("div", "po-columns");
+    columnsWrap.style.height = totalHeight + "px";
+    columnsWrap.style.setProperty("--po-hour-px", PX_PER_HOUR + "px");
+
+    venue.columns.forEach(function (col) {
+      var colEl = el("div", "po-col");
+      colEl.style.height = totalHeight + "px";
+
+      var lanedEvents = assignLanes(col.events);
+      lanedEvents.forEach(function (ev) {
+        var s = toMinutes(ev.start);
+        var e = toMinutes(ev.end);
+        var top = (s - dayStartMin) * pxPerMinute;
+        var height = Math.max(20, (e - s) * pxPerMinute - 4);
+
+        var lanes = ev._totalLanes || 1;
+        var laneWidthPct = 100 / lanes;
+        var leftPct = ev._lane * laneWidthPct;
+
+        var box = el("div", "po-event " + (ev.type === "solid" ? "po-solid" : "po-light"));
+        box.style.setProperty("--po-color", col.color);
+        box.style.setProperty("--po-bg", hexToRgba(col.color, 0.12));
+        box.style.top = top + "px";
+        box.style.height = height + "px";
+        box.style.left = "calc(" + leftPct + "% + 3px)";
+        box.style.width = "calc(" + laneWidthPct + "% - 6px)";
+
+        box.appendChild(el("div", "po-event-time", fmtRange(ev.start, ev.end)));
+        box.appendChild(el("div", "po-event-title", ev.title));
+
+        if (ev.lines && ev.lines.length) {
+          var ul = el("ul", "po-event-lines");
+          ev.lines.forEach(function (line) { ul.appendChild(el("li", null, line)); });
+          box.appendChild(ul);
+        }
+        if (ev.tag) box.appendChild(el("div", "po-event-tag", ev.tag));
+
+        colEl.appendChild(box);
+      });
+
+      columnsWrap.appendChild(colEl);
+    });
+
+    bodyRow.appendChild(columnsWrap);
+    inner.appendChild(bodyRow);
+    scrollWrap.appendChild(inner);
+    panel.appendChild(scrollWrap);
+    return panel;
+  }
+
+  function build() {
+    var tabBar = document.getElementById("poTabBar");
+    var panels = document.getElementById("poPanels");
+
+    venuesData.forEach(function (venue) {
+      var label = document.createElement("label");
+      label.className = "po-tab-label";
+      label.setAttribute("for", venue.tabId);
+      label.textContent = venue.tabLabel;
+      tabBar.appendChild(label);
+
+      panels.appendChild(buildPanel(venue));
+    });
+  }
+
+  build();
+})();
+</script>
+
+</body>
+</html>
