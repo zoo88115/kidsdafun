@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>凱達格蘭大道主題活動</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 48px;
+    background: #fff;
+    font-family: "PingFang TC","Microsoft JhengHei","Heiti TC","Noto Sans TC",Helvetica,Arial,sans-serif;
+    color: #222;
+  }
+  .wrap { max-width: 440px; margin: 0 auto; }
+
+  .page-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0 0 14px;
+  }
+  .page-intro {
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 10px;
+  }
+  .page-intro strong { font-weight: 700; }
+  .page-intro a { color: #1c8c8a; }
+  .page-intro + .page-intro { margin-top: 10px; }
+
+  .cards { margin-top: 22px; display: flex; flex-direction: column; gap: 22px; }
+
+  .card { position: relative; }
+  .card-toggle { display: none; }
+  .card-toggle:checked ~ .card-front { visibility: hidden; }
+
+  /* ---- 正面 ---- */
+  .card-front {
+    display: block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .card-img-wrap {
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+  }
+  .card-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 442 / 600;
+    object-fit: cover;
+    background: #dfeeee;
+  }
+  /* 卡片圖片本身就已經畫好圓角虛線框、太陽、雲朵彩虹，這裡只疊上文字，
+     背景改透明，並用百分比定位對齊圖片裡畫好的虛線框位置
+     （量測自參考圖：上緣 50.1%、下緣距底 8.5%、左緣 11.5%、右緣距右 11%） */
+  .card-tag-box {
+    position: absolute;
+    left: 11.5%;
+    right: 11%;
+    top: 50.1%;
+    bottom: 8.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: transparent;
+    border-radius: 14px;
+    padding: 6px 10px;
+    text-align: center;
+  }
+  .card-tag {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .card-title {
+    color: #fff210;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .tap-hint {
+    text-align: center;
+    font-size: 11px;
+    color: #8aa9a8;
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---- 背面 ---- */
+  /* 疊在正面卡片同一個範圍內（絕對定位＋inset:0），確保翻面時卡片尺寸與比例
+     和正面完全一致，不會因為高度改變而讓下方卡片跟著跳動、跑版 */
+  .card-back {
+    display: none;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    justify-content: center;
+    background: #2fafae;
+    border-radius: 18px;
+    padding: 20px 18px 18px;
+    color: #fff;
+    overflow-y: auto;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    animation: pop-in 0.18s ease-out;
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: translateY(4px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .card-toggle:checked ~ .card-back { display: flex; }
+  .back-title {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .back-body {
+    font-size: 14.5px;
+    line-height: 1.75;
+    margin: 0 0 16px;
+  }
+  .back-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pill {
+    display: inline-block;
+    background: #fff;
+    color: #1c8c8a;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 7px 16px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .pill-link {
+    background: #fff210;
+    color: #1c6b6a;
+  }
+
+  .footnote {
+    margin-top: 28px;
+    font-size: 11.5px;
+    color: #999;
+    line-height: 1.7;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="cards">
+
+    <!-- 1. 氣候變遷小學堂 -->
+    <div class="card">
+      <input type="checkbox" id="c1" class="card-toggle">
+      <label for="c1" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_7c3c47c96e9b44b6bab9894c4e21007e~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(2).png" alt="氣候變遷小學堂">
+          <div class="card-tag-box">
+            <div class="card-tag">氣候好重要</div>
+            <div class="card-title">氣候變遷<br>小學堂</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c1" class="card-back">
+        <div class="back-title">氣候變遷小學堂</div>
+        <p class="back-body">夏天愈來愈熱、溜滑梯好燙，想去山裡玩又怕中暑？這不只是氣候變遷，更是我們正在變化的日常。我們準備了有趣的綠能互動與氣候小知識，一起來挑戰氣候變遷小學堂！</p>
+        <div class="back-buttons">
+          <span class="pill">全日展區自由入場</span>
+          <a class="pill pill-link" href="https://www.accupass.com/event/2608270141031189670083" target="_blank" rel="noopener noreferrer">講座點此報名</a>
+        </div>
+      </label>
+    </div>
+
+    <!-- 2. 我的街道我來設計 -->
+    <div class="card">
+      <input type="checkbox" id="c2" class="card-toggle">
+      <label for="c2" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_2c54df19876a4699ad8b70332e356b77~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(3).png" alt="我的街道我來設計">
+          <div class="card-tag-box">
+            <div class="card-tag">移動好重要</div>
+            <div class="card-title">我的街道<br>我來設計</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c2" class="card-back">
+        <div class="back-title">兒本交通<br>我的街道我來設計</div>
+        <p class="back-body">街道該怎麼設計才讓孩子更安心？我們在凱道打造了一條特別的街道，邀請大人戴上「95 公分翻轉鏡」體驗小孩看出去的世界。小朋友則可以跟著「硬派卡」化身交通設計師，搬動街道道具、改造模擬街景，動手打造最安全好走的理想街道！</p>
+        <div class="back-buttons">
+          <span class="pill">全日展區自由入場</span>
+          <a class="pill pill-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank" rel="noopener noreferrer">工作坊報名</a>
+        </div>
+      </label>
+    </div>
+
+    <!-- 3. 全民運動基地／自由遊戲基地 -->
+    <div class="card">
+      <input type="checkbox" id="c3" class="card-toggle">
+      <label for="c3" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_a6699f9f4ebe4adc82e780095e3390b8~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(9).png" alt="全民運動基地、自由遊戲基地">
+          <div class="card-tag-box">
+            <div class="card-tag">跑跳好重要</div>
+            <div class="card-title">全民運動基地<br>自由遊戲基地</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c3" class="card-back">
+        <div class="back-title">全民運動基地<br>＋自由遊戲基地</div>
+        <p class="back-body">動起來本來就是最快樂的事！這裡不分「玩」和「運動」，跑累了就坐下丟球，打完球也能一頭衝進泡泡池自由瘋玩。現場有平權同樂的地板滾球、簡單好玩的布袋球、各高度籃框、親子拳擊，還有充氣不倒翁擂台，想怎麼動、怎麼玩，全由你決定！</p>
+        <div class="back-buttons">
+          <span class="pill">全日展區自由入場</span>
+          <a class="pill pill-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank" rel="noopener noreferrer">體驗活動報名</a>
+        </div>
+      </label>
+    </div>
+
+    <!-- 4. 客庄市場好好玩 -->
+    <div class="card">
+      <input type="checkbox" id="c4" class="card-toggle">
+      <label for="c4" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_c7a5583e9fa84dc6929c447f0961cd3a~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/5.png" alt="客庄市場好好玩">
+          <div class="card-tag-box">
+            <div class="card-tag">飲食好重要</div>
+            <div class="card-title">客庄市場<br>好好玩</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c4" class="card-back">
+        <div class="back-title">客庄市場好好玩</div>
+        <p class="back-body">小孩當家做主！帶上 200 元及自備環保袋走進客庄菜市場，自己挑菜、算錢、討價還價，還能體驗客家米食與醃漬手作。採線上預約報名，每場次特別保留現場名額 10 位！</p>
+        <div class="back-buttons">
+          <span class="pill">北廣場</span>
+          <a class="pill pill-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank" rel="noopener noreferrer">市場報名</a>
+        </div>
+      </label>
+    </div>
+
+    <!-- 5. 兒童攝影棚 -->
+    <div class="card">
+      <input type="checkbox" id="c5" class="card-toggle">
+      <label for="c5" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_56ff8f03d5be4459acb39e93c5db4dc4~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/4.png" alt="兒童攝影棚">
+          <div class="card-tag-box">
+            <div class="card-tag">媒體好重要</div>
+            <div class="card-title">行動<br>攝影棚</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c5" class="card-back">
+        <div class="back-title">兒童攝影棚</div>
+        <p class="back-body">你每天看的影片，有說出你真正關心的事嗎？這次換你走進鏡頭、成為主角！我們在北廣場打造了一座「行動攝影棚」，邀請你一起錄製「給地球的一句話」，親自體驗拍攝與創作的樂趣，用你的聲音讓更多人看見你的想法！</p>
+        <div class="back-buttons">
+          <span class="pill">北廣場</span>
+          <span class="pill">全日展區自由入場</span>
+        </div>
+      </label>
+    </div>
+
+    <!-- 6. 小老闆二手市集／資源循環維修棧 -->
+    <div class="card">
+      <input type="checkbox" id="c6" class="card-toggle">
+      <label for="c6" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_fa0a717e430e4c8eb59051bfae4ec41a~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(4).png" alt="小老闆二手市集、資源循環維修棧">
+          <div class="card-tag-box">
+            <div class="card-tag">珍惜好重要</div>
+            <div class="card-title">小老闆二手市集<br>資源循環維修棧</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c6" class="card-back">
+        <div class="back-title">小老闆二手市集<br>＋資源循環維修棧</div>
+        <p class="back-body">逛逛小老闆精心挑選的二手玩具與好書，讓心愛物品交棒延續；跟著維修師傅拆裝玩具零件賦予新生命。一起動動手，給物品第二次生命，懂得珍惜就是保護地球最好的超能力！</p>
+        <div class="back-buttons">
+          <span class="pill">北廣場</span>
+          <a class="pill pill-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfsyRysbfc0BvJSET1kzt9illLNiOX7OZlajUp-lcHk9vVdeg/viewform" target="_blank" rel="noopener noreferrer">小老闆報名</a>
+          <span class="pill">全日展區自由入場</span>
+        </div>
+      </label>
+    </div>
+
+    <!-- 7. 飲食補給站 -->
+    <div class="card">
+      <input type="checkbox" id="c7" class="card-toggle">
+      <label for="c7" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_00e1bbabde174fbfa88dd771108b68c4~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(7).png" alt="飲食補給站">
+          <div class="card-tag-box">
+            <div class="card-tag">休息好重要</div>
+            <div class="card-title">飲食補給站</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c7" class="card-back">
+        <div class="back-title">飲食補給站</div>
+        <p class="back-body">玩累了！就來飲食補給站補充能量！邀請生態廚師與在地優良生產者，用台灣本土新鮮食材端出滿滿好滋味！一起用味蕾認識土地的故事。響應永續減塑，請大家自備餐具一起來開動（現場備有少量循環餐具可租借喔）。</p>
+        <div class="back-buttons">
+          <span class="pill">北廣場</span>
+          <span class="pill">自備餐具</span>
+        </div>
+      </label>
+    </div>
+
+    <!-- 8. 電力補給站 -->
+    <div class="card">
+      <input type="checkbox" id="c8" class="card-toggle">
+      <label for="c8" class="card-front">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://static.wixstatic.com/media/d403de_6438bce71f5e4606b28a1a41c9b57bdc~mv2.png/v1/crop/x_14,y_0,w_371,h_500/fill/w_442,h_600,al_c,lg_1,q_85,enc_avif,quality_auto/%E6%9C%89%E6%A9%9F%E7%94%9F%E6%B4%BB%E4%B8%AD%E5%BF%83%20(5).png" alt="電力補給站">
+          <div class="card-tag-box">
+            <div class="card-tag">發電好重要</div>
+            <div class="card-title">電力補給站</div>
+          </div>
+        </div>
+        <div class="tap-hint">點一下查看詳情 ›</div>
+      </label>
+      <label for="c8" class="card-back">
+        <div class="back-title">電力補給站</div>
+        <p class="back-body">一起動手收集大自然的能量！化身「小小光電工程師」，體驗有趣的水力與太陽能互動挑戰，在玩樂中發現綠色能源的神奇奧祕。</p>
+        <div class="back-buttons">
+          <span class="pill">北廣場</span>
+          <span class="pill">全日展區自由入場</span>
+        </div>
+      </label>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
