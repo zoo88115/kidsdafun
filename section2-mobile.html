@@ -31,9 +31,29 @@
   .page-intro a { color: #1c8c8a; }
   .page-intro + .page-intro { margin-top: 10px; }
 
-  .cards { margin-top: 22px; display: flex; flex-direction: column; gap: 22px; }
+  /* 橫排呈現＋可左右滑動：每張卡片固定 85% 寬，卡片間留 5% 寬的間距，
+     這樣下一張卡片會露出一點邊緣，讓人知道可以往右滑；並保留（美化過的）
+     捲軸提示這裡可以橫向滑動 */
+  .cards {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cards::-webkit-scrollbar { height: 6px; }
+  .cards::-webkit-scrollbar-track { background: #eef5f5; border-radius: 999px; }
+  .cards::-webkit-scrollbar-thumb { background: #8aa9a8; border-radius: 999px; }
 
-  .card { position: relative; }
+  .card {
+    position: relative;
+    flex: 0 0 85%;
+    width: 85%;
+    scroll-snap-align: start;
+  }
   .card-toggle { display: none; }
   .card-toggle:checked ~ .card-front { visibility: hidden; }
 
@@ -119,13 +139,13 @@
   }
   .card-toggle:checked ~ .card-back { display: flex; }
   .back-title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 10px;
   }
   .back-body {
-    font-size: 14.5px;
+    font-size: 12.5px;
     line-height: 1.75;
     margin: 0 0 16px;
   }
@@ -138,7 +158,7 @@
     display: inline-block;
     background: #fff;
     color: #1c8c8a;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     border-radius: 999px;
     padding: 7px 16px;
@@ -293,7 +313,7 @@
       </label>
       <label for="c6" class="card-back">
         <div class="back-title">小老闆二手市集<br>＋資源循環維修棧</div>
-        <p class="back-body">逛逛小老闆精心挑選的二手玩具與好書，讓心愛物品交棒延續；跟著維修師傅拆裝玩具零件賦予新生命。一起動動手，給物品第二次生命，懂得珍惜就是保護地球最好的超能力！</p>
+        <p class="back-body">逛逛小老闆精心挑選的二手玩具與好書，讓心愛物品交棒延續；跟著維修師傅一起電風扇健康檢查、拆開玩具看看裡面有什麼零件、把不要的木頭做成生活小物、把壞掉的吸塵器變成一盞閃亮亮的燈。</p>
         <div class="back-buttons">
           <span class="pill">北廣場</span>
           <a class="pill pill-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfsyRysbfc0BvJSET1kzt9illLNiOX7OZlajUp-lcHk9vVdeg/viewform" target="_blank" rel="noopener noreferrer">小老闆報名</a>
