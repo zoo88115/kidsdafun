@@ -316,7 +316,10 @@
       tabLabel: "北廣場",
       venueName: "北廣場",
       dayStart: "10:00",
-      dayEnd: "16:00",
+      dayEnd: "16:20",
+      // 標題列顯示用的結束時間：舞台區最後一場「兒童電音派對」到 16:20 才結束，
+      // 時間軸／欄位高度仍然要以 dayEnd(16:20) 計算，只有標題列文字改顯示 16:00
+      displayDayEnd: "16:00",
       titleColor: "#1c8a3a",
       headerStyle: "plain",
       showSubBar: true,
@@ -519,7 +522,10 @@
 
     var inner = el("div", "po-inner");
 
-    var titleBar = el("div", "po-title-bar", venue.venueName + " ｜ " + venue.dayStart + "-" + venue.dayEnd);
+    // 標題列文字可用 displayDayEnd 覆蓋顯示用的結束時間（例如活動 16:20 才結束，
+    // 但想顯示成 16:00），時間軸／欄位高度仍然照 venue.dayEnd 實際計算，兩者互不影響
+    var displayDayEnd = venue.displayDayEnd || venue.dayEnd;
+    var titleBar = el("div", "po-title-bar", venue.venueName + " ｜ " + venue.dayStart + "-" + displayDayEnd);
     titleBar.style.background = venue.titleColor;
     inner.appendChild(titleBar);
 
