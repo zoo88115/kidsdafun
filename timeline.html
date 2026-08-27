@@ -123,14 +123,22 @@
   #poTimelineRoot .po-event.po-background .po-bg-label {
     font-size: 10px; font-weight: 600; color: var(--po-color); opacity: 0.65;
   }
+  #poTimelineRoot .po-event.po-background .po-event-tag-row {
+    pointer-events: auto;
+  }
 
   #poTimelineRoot .po-event-time { font-weight: 700; font-size: 11px; margin-bottom: 2px; }
   #poTimelineRoot .po-event.po-solid .po-event-time { opacity: 0.9; }
   #poTimelineRoot .po-event-title { font-weight: 700; font-size: 12.5px; }
   #poTimelineRoot .po-event-sub { margin-top: 2px; font-size: 10px; line-height: 1.25; opacity: 0.95; }
 
+  /* 有 tag 時，tag 自成一行置頂靠右，時間／標題文字往下移，避免互相遮擋 */
+  #poTimelineRoot .po-event-tag-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+  }
   #poTimelineRoot .po-event-tag {
-    position: absolute; top: 4px; right: 5px;
     font-size: 9.5px; background: rgba(255,255,255,0.85); color: #333;
     border-radius: 10px; padding: 1px 6px; white-space: nowrap;
   }
@@ -186,50 +194,50 @@
           subtitle: "凱風卡瑪閱讀之森", tag: "閱讀好重要",
           events: [
             { start: "09:00", end: "16:00", title: "親子閱讀全區開放中", type: "background" },
-            { start: "10:30", end: "11:00", title: "說故事時間：環境部長 彭啓明" },
-            { start: "11:30", end: "12:00", title: "說故事時間：繪本作家 賴馬 × 陳培瑜" },
-            { start: "12:00", end: "12:30", title: "說故事時間：親子天下 小行星" },
-            { start: "13:00", end: "13:30", title: "說故事時間：客委會主委 古秀妃" },
-            { start: "14:00", end: "14:30", title: "說故事時間：繪本作家 林小杯" },
-            { start: "15:00", end: "15:30", title: "說故事時間：立法委員陳培瑜" }
+            { start: "10:30", end: "11:00", title: "說故事時間：環境部長 彭啓明" , type: "solid"},
+            { start: "11:30", end: "12:00", title: "說故事時間：繪本作家 賴馬 × 陳培瑜" , type: "solid"},
+            { start: "12:00", end: "12:30", title: "說故事時間：親子天下 小行星" , type: "solid"},
+            { start: "13:00", end: "13:30", title: "說故事時間：客委會主委 古秀妃" , type: "solid"},
+            { start: "14:00", end: "14:30", title: "說故事時間：繪本作家 林小杯" , type: "solid"},
+            { start: "15:00", end: "15:30", title: "說故事時間：立法委員陳培瑜" , type: "solid"}
           ]
         },
         {
           name: "北苑", color: "#f2a20c",
           subtitle: "火柴貓防災大作戰", tag: "防災好重要",
           events: [
-            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰，全日開放", noTime: true }
+            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰，全日開放", type: "background" }
           ]
         },
         {
           name: "新聞中心", color: "#f2a20c",
           subtitle: "今天遇見誰", tag: "好奇好重要",
           events: [
-            { start: "09:00", end: "16:00", title: "今天遇見誰，全日開放", noTime: true, tag: "🔒 事前甄選．已截止" }
+            { start: "09:00", end: "16:00", title: "今天遇見誰，全日開放", type: "background", tag: "🔒 事前甄選．已截止" }
           ]
         },
         {
           name: "大禮堂", color: "#f2a20c",
           subtitle: "兒童氣候變遷高峰會 × 親子電影院", tag: "永續好重要．放電好重要",
           events: [
-            { start: "11:00", end: "12:00", title: "兒童氣候變遷高峰會", tag: "📡 北廣場同步直播" },
+            { start: "11:00", end: "12:00", title: "兒童氣候變遷高峰會", tag: "📡 北廣場同步直播" , type: "solid"},
             {
               start: "13:30", end: "14:50", title: "親子電影院", tag: "✅ 需報名",
               link: "https://forms.gle/yTxrZtiki1HcFWQc9",
-              lines: ["登山總動員：男子漢的百岳比賽", "我的小樹超人", "悄悄話：好朋友的秘密", "你吹do我吹si"]
+              lines: ["登山總動員：男子漢的百岳比賽", "我的小樹超人", "悄悄話：好朋友的秘密", "你吹do我吹si"], type: "solid"
             },
-            { start: "15:00", end: "15:30", title: "兒童電音派對" }
+            { start: "15:00", end: "15:30", title: "兒童電音派對" , type: "solid"}
           ]
         },
         {
           name: "敞廳", color: "#f2a20c",
           subtitle: "兒童快閃表演", tag: "",
           events: [
-            { start: "10:00", end: "10:30", title: "冠軍幼兒園 中班｜勇敢的山頭 律動" },
-            { start: "11:00", end: "11:30", title: "金華國小｜有時天晴有時雨 合唱" },
-            { start: "13:00", end: "13:30", title: "音樂同盟｜如果受了傷 合唱" },
-            { start: "14:00", end: "14:30", title: "幸安國小合唱團｜你好緊張 合唱" },
-            { start: "15:00", end: "15:30", title: "士林體操班｜虎姑婆 舞蹈" }
+            { start: "10:00", end: "10:30", title: "冠軍幼兒園 中班｜勇敢的山頭 律動" , type: "solid"},
+            { start: "11:00", end: "11:30", title: "金華國小｜有時天晴有時雨 合唱" , type: "solid"},
+            { start: "13:00", end: "13:30", title: "音樂同盟｜如果受了傷 合唱" , type: "solid"},
+            { start: "14:00", end: "14:30", title: "幸安國小合唱團｜你好緊張 合唱" , type: "solid"},
+            { start: "15:00", end: "15:30", title: "士林體操班｜虎姑婆 舞蹈" , type: "solid"}
           ]
         }
       ]
@@ -275,7 +283,7 @@
         {
           name: "自由遊戲基地", color: "#d1668f", tag: "跑跳好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "自由遊戲基地，全日開放", noTime: true }
+            { start: "10:00", end: "16:00", title: "自由遊戲基地，全日開放", type: "background"}
           ]
         }
       ]
@@ -316,7 +324,7 @@
         {
           name: "行動攝影棚", color: "#1c8a3a", tag: "媒體好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "行動攝影棚，全日開放", noTime: true }
+            { start: "10:00", end: "16:00", title: "行動攝影棚，全日開放", type: "background"}
           ]
         },
         {
@@ -337,19 +345,14 @@
         {
           name: "電力補給站", color: "#1c8a3a", tag: "發電好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "電力補給站，全日開放中", noTime: true }
+            { start: "10:00", end: "16:00", title: "電力補給站，全日開放中", type: "background"}
           ]
         }
       ]
     }
   ];
 
-  var NOTE_HTML = "＊資料來源：2026 大FUN凱道 全日活動時刻表 PDF（三大分區彙整版）。"
-    + "「敞廳｜兒童快閃表演」各場只標示開始時間，結束時間文件未載明，暫以 30 分鐘估算。"
-    + "「北廣場｜舞台區」最後一場到 16:20，超出該場地標示的 10:00-16:00，故此分頁時間軸下限延到 16:20 以完整顯示。"
-    + "「小老闆市集招募」為無時段的招募資訊，未放入時間軸（招募連結：<a href=\"https://bit.ly/4wI7olX\" target=\"_blank\" rel=\"noopener noreferrer\">bit.ly/4wI7olX</a>）。"
-    + "淡色整欄色塊代表「全日開放、自由入場」的區域說明；有底線的標籤文字可點擊開啟報名連結。"
-    + "如有異動請直接修改本檔最上方的 venuesData。";
+  var NOTE_HTML = "";
 
   // ============================================================
   var PX_PER_HOUR_DEFAULT = 108;
@@ -364,6 +367,14 @@
     if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
     var r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
     return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+  }
+  // 不透明的淺色調（把顏色和白色混合成實色），避免半透明底色讓時間軸的小時刻度線穿透文字
+  function hexToOpaqueTint(hex, ratio) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
+    var r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+    var mix = function (c) { return Math.round(c * ratio + 255 * (1 - ratio)); };
+    return "rgb(" + mix(r) + "," + mix(g) + "," + mix(b) + ")";
   }
   function el(tag, className, text) {
     var e = document.createElement(tag);
@@ -398,11 +409,32 @@
 
     var box = el("div", "po-event " + (isBackground ? "po-background" : (ev.type === "solid" ? "po-solid" : "po-light")));
     box.style.setProperty("--po-color", col.color);
-    box.style.setProperty("--po-bg", hexToRgba(col.color, isBackground ? 0.07 : 0.12));
+    // 全日活動（background）維持半透明，讓底下的時間刻度線可以對照；一般卡片改用不透明淺色，避免刻度線穿透文字
+    box.style.setProperty("--po-bg", isBackground ? hexToRgba(col.color, 0.07) : hexToOpaqueTint(col.color, 0.12));
     box.style.top = top + "px";
     box.style.height = height + "px";
     box.style.left = "calc(" + leftPct + "% + 3px)";
     box.style.width = "calc(" + widthPct + "% - 6px)";
+
+    function appendTag() {
+      if (!ev.tag) return;
+      var row = el("div", "po-event-tag-row");
+      if (ev.link) {
+        var a = document.createElement("a");
+        a.className = "po-event-tag";
+        a.href = ev.link;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = ev.tag;
+        row.appendChild(a);
+      } else {
+        row.appendChild(el("div", "po-event-tag", ev.tag));
+      }
+      box.appendChild(row);
+    }
+
+    // tag（若有）永遠排在最上面自成一行，時間／文字接續往下排，避免互相遮擋
+    appendTag();
 
     if (isBackground) {
       box.appendChild(el("div", "po-bg-label", ev.title));
@@ -415,19 +447,6 @@
     box.appendChild(el("div", "po-event-title", ev.title));
     if (ev.lines && ev.lines.length) {
       box.appendChild(el("div", "po-event-sub", ev.lines.join("、")));
-    }
-    if (ev.tag) {
-      if (ev.link) {
-        var a = document.createElement("a");
-        a.className = "po-event-tag";
-        a.href = ev.link;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.textContent = ev.tag;
-        box.appendChild(a);
-      } else {
-        box.appendChild(el("div", "po-event-tag", ev.tag));
-      }
     }
     return box;
   }
@@ -514,7 +533,6 @@
       tabBar.appendChild(label);
       panels.appendChild(buildPanel(venue));
     });
-    document.getElementById("poNote").innerHTML = NOTE_HTML;
   }
 
   build();
