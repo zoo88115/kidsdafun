@@ -177,12 +177,12 @@
       dayStart: "09:00",
       dayEnd: "16:00",
       titleColor: "#f2a20c",
-      headerStyle: "colored",
-      showSubBar: false,
+      headerStyle: "plain",
+      showSubBar: true,
       pxPerHour: 130,
       columns: [
         {
-          name: "南苑", color: "#2f6fb3",
+          name: "南苑", color: "#f2a20c",
           subtitle: "凱風卡瑪閱讀之森", tag: "閱讀好重要",
           events: [
             { start: "09:00", end: "16:00", title: "親子閱讀全區開放中", type: "background" },
@@ -195,21 +195,21 @@
           ]
         },
         {
-          name: "北苑", color: "#e8720c",
+          name: "北苑", color: "#f2a20c",
           subtitle: "火柴貓防災大作戰", tag: "防災好重要",
           events: [
-            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰（全日固定活動）", type: "solid" }
+            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰，全日開放", noTime: true }
           ]
         },
         {
-          name: "新聞中心", color: "#1f9d55",
+          name: "新聞中心", color: "#f2a20c",
           subtitle: "今天遇見誰", tag: "好奇好重要",
           events: [
-            { start: "09:00", end: "16:00", title: "今天遇見誰", type: "solid", tag: "🔒 事前甄選．已截止" }
+            { start: "09:00", end: "16:00", title: "今天遇見誰，全日開放", noTime: true, tag: "🔒 事前甄選．已截止" }
           ]
         },
         {
-          name: "大禮堂", color: "#d9534f",
+          name: "大禮堂", color: "#f2a20c",
           subtitle: "兒童氣候變遷高峰會 × 親子電影院", tag: "永續好重要．放電好重要",
           events: [
             { start: "11:00", end: "12:00", title: "兒童氣候變遷高峰會", tag: "📡 北廣場同步直播" },
@@ -222,7 +222,7 @@
           ]
         },
         {
-          name: "敞廳", color: "#6a4fa0",
+          name: "敞廳", color: "#f2a20c",
           subtitle: "兒童快閃表演", tag: "",
           events: [
             { start: "10:00", end: "10:30", title: "冠軍幼兒園 中班｜勇敢的山頭 律動" },
@@ -275,7 +275,7 @@
         {
           name: "自由遊戲基地", color: "#d1668f", tag: "跑跳好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "自由遊戲基地，全日開放，無特定場次", type: "solid" }
+            { start: "10:00", end: "16:00", title: "自由遊戲基地，全日開放", noTime: true }
           ]
         }
       ]
@@ -283,8 +283,8 @@
     {
       id: "poPanel3",
       tabId: "poTab3",
-      tabLabel: "總統府北廣場",
-      venueName: "總統府北廣場",
+      tabLabel: "北廣場",
+      venueName: "北廣場",
       dayStart: "10:00",
       dayEnd: "16:20",
       titleColor: "#1c8a3a",
@@ -316,7 +316,7 @@
         {
           name: "行動攝影棚", color: "#1c8a3a", tag: "媒體好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "行動攝影棚（全日開放）", type: "solid" }
+            { start: "10:00", end: "16:00", title: "行動攝影棚，全日開放", noTime: true }
           ]
         },
         {
@@ -327,7 +327,7 @@
           ]
         },
         {
-          name: "資源循環維修站", color: "#1c8a3a", tag: "珍惜好重要",
+          name: "資源循環維修棧", color: "#1c8a3a", tag: "珍惜好重要",
           events: [
             { start: "10:00", end: "16:00", title: "玩具拆裝體驗／廢木材再利用／光的再造工作坊，全日開放", type: "background" },
             { start: "10:30", end: "12:30", title: "小小維修師傅－電風扇保養實作", type: "solid" },
@@ -337,7 +337,7 @@
         {
           name: "電力補給站", color: "#1c8a3a", tag: "發電好重要",
           events: [
-            { start: "10:00", end: "16:00", title: "電力補給站", type: "solid" }
+            { start: "10:00", end: "16:00", title: "電力補給站，全日開放中", noTime: true }
           ]
         }
       ]
@@ -346,7 +346,7 @@
 
   var NOTE_HTML = "＊資料來源：2026 大FUN凱道 全日活動時刻表 PDF（三大分區彙整版）。"
     + "「敞廳｜兒童快閃表演」各場只標示開始時間，結束時間文件未載明，暫以 30 分鐘估算。"
-    + "「總統府北廣場｜舞台區」最後一場到 16:20，超出該場地標示的 10:00-16:00，故此分頁時間軸下限延到 16:20 以完整顯示。"
+    + "「北廣場｜舞台區」最後一場到 16:20，超出該場地標示的 10:00-16:00，故此分頁時間軸下限延到 16:20 以完整顯示。"
     + "「小老闆市集招募」為無時段的招募資訊，未放入時間軸（招募連結：<a href=\"https://bit.ly/4wI7olX\" target=\"_blank\" rel=\"noopener noreferrer\">bit.ly/4wI7olX</a>）。"
     + "淡色整欄色塊代表「全日開放、自由入場」的區域說明；有底線的標籤文字可點擊開啟報名連結。"
     + "如有異動請直接修改本檔最上方的 venuesData。";
@@ -409,7 +409,9 @@
       return box;
     }
 
-    box.appendChild(el("div", "po-event-time", fmtRange(ev.start, ev.end)));
+    if (!ev.noTime) {
+      box.appendChild(el("div", "po-event-time", fmtRange(ev.start, ev.end)));
+    }
     box.appendChild(el("div", "po-event-title", ev.title));
     if (ev.lines && ev.lines.length) {
       box.appendChild(el("div", "po-event-sub", ev.lines.join("、")));
