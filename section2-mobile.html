@@ -31,9 +31,10 @@
   .page-intro a { color: #1c8c8a; }
   .page-intro + .page-intro { margin-top: 10px; }
 
-  /* 橫排呈現＋可左右滑動：每張卡片固定 85% 寬，卡片間留 5% 寬的間距，
+  /* 橫排呈現＋可左右滑動：每張卡片固定 90% 寬，卡片間留 5% 寬的間距，
      這樣下一張卡片會露出一點邊緣，讓人知道可以往右滑；並保留（美化過的）
      捲軸提示這裡可以橫向滑動 */
+  .cards-wrap { position: relative; }
   .cards {
     margin-top: 22px;
     display: flex;
@@ -48,10 +49,66 @@
   .cards::-webkit-scrollbar-track { background: #eef5f5; border-radius: 999px; }
   .cards::-webkit-scrollbar-thumb { background: #8aa9a8; border-radius: 999px; }
 
+  /* 首次進頁面時鎖住橫向滑動，直到使用者按掉提示為止 */
+  .cards.scroll-locked { overflow-x: hidden; }
+
+  /* 滑動提示：半透明疊在第一張卡片的圖片上（不是整個畫面的彈窗），
+     點畫面上任何一處（包含按鈕）都會關閉，之後才能開始左右滑動 */
+  .swipe-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 46, 46, 0.72);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+    z-index: 6;
+    animation: modal-fade-in 0.2s ease-out;
+  }
+  .swipe-modal.is-hidden { display: none; }
+  @keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .swipe-modal-arrows {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 16px;
+    margin-bottom: 8px;
+    animation: arrows-sway 1.3s ease-in-out infinite;
+  }
+  @keyframes arrows-sway {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
+  }
+  .swipe-modal-text {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .swipe-modal-btn {
+    display: inline-block;
+    background: #fff210;
+    color: #1c6b6a;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    padding: 9px 28px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
   .card {
     position: relative;
-    flex: 0 0 85%;
-    width: 85%;
+    flex: 0 0 90%;
+    width: 90%;
     scroll-snap-align: start;
   }
   .card-toggle { display: none; }
@@ -181,7 +238,8 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="cards">
+  <div class="cards-wrap">
+  <div class="cards scroll-locked" id="cardsTrack">
 
     <!-- 1. 氣候變遷小學堂 -->
     <div class="card">
@@ -192,6 +250,11 @@
           <div class="card-tag-box">
             <div class="card-tag">氣候好重要</div>
             <div class="card-title">氣候變遷<br>小學堂</div>
+          </div>
+          <div class="swipe-modal" id="swipeModal">
+            <div class="swipe-modal-arrows">‹ ›</div>
+            <div class="swipe-modal-text">左右滑動<br>查看更多活動</div>
+            <button type="button" class="swipe-modal-btn" id="swipeModalClose">我知道了</button>
           </div>
         </div>
         <div class="tap-hint">點一下查看詳情 ›</div>
@@ -337,10 +400,10 @@
       </label>
       <label for="c7" class="card-back">
         <div class="back-title">飲食補給站</div>
-        <p class="back-body">玩累了！就來飲食補給站補充能量！邀請生態廚師與在地優良生產者，用台灣本土新鮮食材端出滿滿好滋味！一起用味蕾認識土地的故事。為響應永續減塑，請大家自備餐具一起來開動，現場備有少量循環餐具可租借喔。</p>
+        <p class="back-body">玩累了！就來飲食補給站補充能量！邀請生態廚師與在地優良生產者，用台灣本土新鮮食材端出滿滿好滋味！一起用味蕾認識土地的故事。響應永續減塑，請大家自備餐具一起來開動（現場備有少量循環餐具可租借喔）。</p>
         <div class="back-buttons">
           <span class="pill">北廣場</span>
-          <span class="pill">建議自備餐具</span>
+          <span class="pill">自備餐具</span>
         </div>
       </label>
     </div>
@@ -369,7 +432,31 @@
     </div>
 
   </div>
+  </div>
 
 </div>
+
+<script>
+(function () {
+  var track = document.getElementById("cardsTrack");
+  var modal = document.getElementById("swipeModal");
+  var closeBtn = document.getElementById("swipeModalClose");
+  if (!track || !modal || !closeBtn) return;
+
+  // 一開始 .cards 就有 scroll-locked（overflow-x: hidden）鎖住橫向滑動，
+  // 使用者按掉提示後才移除鎖定，改成可以左右滑動
+  function dismiss(e) {
+    // 提示疊在 card-front 這個 label 裡面，點下去預設會順便觸發翻卡，
+    // 這裡要擋掉，讓「按掉提示」跟「翻卡片」是兩個不會互相干擾的動作
+    e.preventDefault();
+    e.stopPropagation();
+    modal.classList.add("is-hidden");
+    track.classList.remove("scroll-locked");
+  }
+
+  // 點提示裡的任何地方（不只是按鈕）都可以關閉
+  modal.addEventListener("click", dismiss);
+})();
+</script>
 </body>
 </html>
