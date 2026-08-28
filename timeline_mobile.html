@@ -107,20 +107,7 @@
   .links-box b{display:block;margin-bottom:4px;font-size:13px;}
   .links-box a{color:#1a6fb0;word-break:break-all;}
 
-  /* 一個 zone 底下所有的 area-block 一起包在同一個 .area-scroll 裡，
-     整組（每一個活動分區的標題＋表格）共用同一條橫向捲軸一起左右滑動，
-     而不是各自獨立捲動。area-block 本身要有跟內容一樣的最小寬度，
-     這樣才會真的比 .area-scroll 的可視寬度寬，進而觸發橫向捲動 */
-  .area-scroll{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .area-scroll::-webkit-scrollbar{ height:6px; }
-  .area-scroll::-webkit-scrollbar-track{ background:#f0ece6; }
-  .area-scroll::-webkit-scrollbar-thumb{ background:#cbb999; border-radius:999px; }
-
   .area-block{
-    min-width:560px;
     margin-bottom:18px;
     border-radius:0 0 10px 10px;
     overflow:hidden;
@@ -128,7 +115,6 @@
   }
 
   .area-title{
-    min-width:560px;
     padding:10px 14px;
     font-size:15px;
     font-weight:bold;
@@ -145,11 +131,24 @@
 
   table{
     width:100%;
-    min-width:560px;
     border-collapse:collapse;
     background:#fff;
     font-size:13.5px;
   }
+  /* 原本4欄（時間／活動內容／是否需報名／連結）併成3欄，
+     連結改成直接放在「活動內容」文字上；table-layout:fixed
+     讓 colgroup 設定的 20% / 60% / 20% 寬度確實生效 */
+  table.tbl-link3{ table-layout:fixed; }
+  /* 這3欄的時間欄只有20%寬，「HH:MM-HH:MM」一行放不下，
+     改成允許換行，避免文字直接超出格子、跟下一欄的文字擠在一起 */
+  table.tbl-link3 td.time{ white-space:normal; word-break:keep-all; }
+  /* 第三欄（是否需報名／備註）在20%寬度下，較長的文字（如「✅ 線上報名＋現場開放10名」）
+     用badge原本的white-space:nowrap會超出格子，改成可換行 */
+  table.tbl-link3 .badge{ white-space:normal; }
+  a.content-link{ color:#1a6fb0; text-decoration:underline; }
+  /* 連結改放到第三欄（是否需報名／備註），包住badge本身；
+     badge已有自己的底色與文字色，link不額外加底線/改色，只保留可點擊 */
+  a.badge-link{ text-decoration:none; display:inline-block; }
   th,td{
     padding:9px 7px;
     text-align:left;
@@ -200,6 +199,7 @@
 </style>
 </head>
 <body>
+
 <div class="tabs">
   <button class="tab-btn active" data-zone="president" onclick="showZone('president', this)">總統府</button>
   <button class="tab-btn" data-zone="ketagalan" onclick="showZone('ketagalan', this)">凱達格蘭大道</button>
@@ -218,7 +218,6 @@
     <a href="https://forms.gle/hSTojAUMMZgaFsnNA" target="_blank">點我搭上專屬探險號！</a>
   </div>
 
-  <div class="area-scroll">
   <div class="area-block">
     <div class="area-title">南苑｜凱風卡瑪閱讀之森<small>閱讀好重要｜09:00-16:00 開放</small></div>
     <table>
@@ -275,11 +274,10 @@
             <li>你吹do我吹si</li>
           </ul>
         </td>
-        <td><span class="badge need">✅ 需報名</span><br><a class="reg" href="https://forms.gle/yTxrZtiki1HcFWQc9" target="_blank">報名連結</a></td>
+        <td><a class="reg" href="https://forms.gle/yTxrZtiki1HcFWQc9" target="_blank"><span class="badge need">✅ 需報名</span></a></td>
       </tr>
       <tr><td class="time">15:00-15:30</td><td>兒童電音派對</td><td>—</td></tr>
     </table>
-  </div>
   </div>
 </div>
 
@@ -288,37 +286,39 @@
   <div class="zone-header">凱達格蘭大道（公園路至重慶南路段）<span class="time">10:00-16:00｜氣候變遷小學堂・我的街道我來設計・全民運動基地・自由遊戲基地</span></div>
   <div class="links-box">整條大道 10:00-16:00 全日開放、自由入場；各站點另有限定場次工作坊／活動，需事先報名。</div>
 
-  <div class="area-scroll">
   <div class="area-block">
     <div class="area-title">氣候變遷小學堂<small>氣候好重要</small></div>
-    <table>
-      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
-      <tr><td class="time">10:00-16:00</td><td>氣候變遷小學堂，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
-      <tr><td class="time">14:00-15:00</td><td>氣候變遷 × 山林戶外講座</td><td><span class="badge need">✅ 需報名</span></td><td><a class="reg" href="https://www.accupass.com/go/POWFUN" target="_blank">報名連結</a></td></tr>
+    <table class="tbl-link3">
+      <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>氣候變遷小學堂，全日開放中</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">14:00-15:00</td><td>氣候變遷 × 山林戶外講座</td><td><a class="badge-link" href="https://www.accupass.com/go/POWFUN" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
     </table>
   </div>
 
   <div class="area-block">
     <div class="area-title">我的街道我來設計<small>移動好重要</small></div>
-    <table>
-      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
-      <tr><td class="time">10:00-16:00</td><td>我的街道我來設計，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
-      <tr><td class="time">10:00-11:00</td><td>硬派卡兒本交通培力工作坊①</td><td><span class="badge need">✅ 需報名</span></td><td rowspan="2"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank">報名連結</a></td></tr>
-      <tr><td class="time">11:20-12:20</td><td>硬派卡兒本交通培力工作坊②</td><td><span class="badge need">✅ 需報名</span></td></tr>
+    <table class="tbl-link3">
+      <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>我的街道我來設計，全日開放中</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">10:00-11:00</td><td>硬派卡兒本交通培力工作坊①</td><td><a class="badge-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">11:20-12:20</td><td>硬派卡兒本交通培力工作坊②</td><td><a class="badge-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
     </table>
   </div>
 
   <div class="area-block">
     <div class="area-title">全民運動基地<small>跑跳好重要</small></div>
-    <table>
-      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
-      <tr><td class="time">10:00-16:00</td><td>全民運動基地該區，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
-      <tr><td class="time">10:00-11:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td><td rowspan="6"><a class="reg" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank">報名連結</a></td></tr>
-      <tr><td class="time">11:00-12:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
-      <tr><td class="time">12:00-13:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
-      <tr><td class="time">13:00-14:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
-      <tr><td class="time">14:00-15:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
-      <tr><td class="time">15:00-16:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+    <table class="tbl-link3">
+      <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>全民運動基地該區，全日開放中</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">10:00-11:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">11:00-12:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">12:00-13:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">13:00-14:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">14:00-15:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
+      <tr><td class="time">15:00-16:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><a class="badge-link" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank"><span class="badge need">✅ 需報名</span></a></td></tr>
     </table>
   </div>
 
@@ -329,14 +329,12 @@
       <tr><td class="time">10:00-16:00</td><td>自由遊戲基地，全日開放，無特定場次</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
   </div>
-  </div>
 </div>
 
 <!-- ===================== 三、北廣場 ===================== -->
 <div class="zone" id="plaza">
   <div class="zone-header">總統府北廣場<span class="time">10:00-16:00｜舞台區・客庄市場好好玩・行動攝影棚・小老闆市集・資源循環維修棧・電力補給站</span></div>
 
-  <div class="area-scroll">
   <div class="area-block">
     <div class="area-title">舞台區<small>舞台區</small></div>
     <table>
@@ -362,11 +360,12 @@
 
   <div class="area-block">
     <div class="area-title">客庄市場好好玩<small>飲食好重要</small></div>
-    <table>
-      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
-      <tr><td class="time">10:30-12:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td><td rowspan="3"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank">報名連結</a></td></tr>
-      <tr><td class="time">12:30-14:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
-      <tr><td class="time">14:30-16:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
+    <table class="tbl-link3">
+      <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
+      <tr><td class="time">10:30-12:00</td><td>客庄兒童市場開市</td><td><a class="badge-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank"><span class="badge need">✅ 線上報名＋現場開放10名</span></a></td></tr>
+      <tr><td class="time">12:30-14:00</td><td>客庄兒童市場開市</td><td><a class="badge-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank"><span class="badge need">✅ 線上報名＋現場開放10名</span></a></td></tr>
+      <tr><td class="time">14:30-16:00</td><td>客庄兒童市場開市</td><td><a class="badge-link" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank"><span class="badge need">✅ 線上報名＋現場開放10名</span></a></td></tr>
     </table>
   </div>
 
@@ -380,11 +379,14 @@
 
   <div class="area-block">
     <div class="area-title">小老闆市集<small>珍惜好重要</small></div>
-    <table>
-      <tr><th>時間</th><th>活動內容</th><th>備註</th><th>連結</th></tr>
-      <tr><td class="time">即日起</td><td>小老闆市集招募</td><td>小老闆招募中</td><td><a class="reg" href="https://bit.ly/4wI7olX" target="_blank">報名連結</a></td></tr>
-      <tr><td class="time">10:00-12:30</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
-      <tr><td class="time">13:30-16:00</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+    <table class="tbl-link3">
+      <colgroup><col style="width:20%"><col style="width:60%"><col style="width:20%"></colgroup>
+      <tr><th>時間</th><th>活動內容</th><th>備註</th></tr>
+      <tr><td class="time">即日起</td><td>小老闆市集招募</td><td>
+	  <a class="reg" href="https://bit.ly/4wI7olX" target="_blank"><span class="badge need">✅ 小老闆招募中</span></a></td>
+	  </td></tr>
+      <tr><td class="time">10:00-12:30</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">13:30-16:00</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
   </div>
 
@@ -404,7 +406,6 @@
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">10:00-16:00</td><td>電力補給站</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
-  </div>
   </div>
 </div>
 
