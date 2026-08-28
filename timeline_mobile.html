@@ -15,6 +15,12 @@
     --text-dark:#333;
   }
   *{box-sizing:border-box;}
+  html{
+    /* 避免 Safari／iOS 在橫向捲動或轉方向時自動放大文字，
+       導致同一頁裡的字級忽然變得不一致 */
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
   body{
     margin:0;
     font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
@@ -46,7 +52,13 @@
     z-index:10;
     padding-top:8px;
   }
+  /* <button> 在所有瀏覽器（含 Safari）預設都不會繼承 body 的 font-family，
+     而是套用系統控制項字型，這裡強制改回跟頁面其他文字一樣的字體，
+     並重置原生按鈕外觀，避免 Safari 疊加自己的按鈕樣式 */
   .tab-btn{
+    -webkit-appearance:none;
+    appearance:none;
+    font-family:inherit;
     border:none;
     border-radius:30px;
     padding:11px 16px;
@@ -188,7 +200,6 @@
 </style>
 </head>
 <body>
-
 <div class="tabs">
   <button class="tab-btn active" data-zone="president" onclick="showZone('president', this)">總統府</button>
   <button class="tab-btn" data-zone="ketagalan" onclick="showZone('ketagalan', this)">凱達格蘭大道</button>
