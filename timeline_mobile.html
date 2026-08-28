@@ -3,534 +3,388 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 大FUN凱道 活動時刻表</title>
+<title>2026 大FUN凱道 全日活動時刻表</title>
 <style>
-  #poTimelineRoot, #poTimelineRoot * { box-sizing: border-box; }
-  #poTimelineRoot {
-    font-family: "PingFang TC","Microsoft JhengHei","Heiti TC","Noto Sans TC",Helvetica,Arial,sans-serif;
-    max-width: 1100px;
-    margin: 0 auto;
-    color: #222;
-    -webkit-font-smoothing: antialiased;
+  :root{
+    --orange:#E8A33D;
+    --orange-light:#FBEBD3;
+    --red:#C0392B;
+    --red-light:#FBE0DD;
+    --green:#4C9A6E;
+    --green-light:#E1F1E7;
+    --text-dark:#333;
   }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"PingFang TC","Microsoft JhengHei",sans-serif;
+    background:#faf8f5;
+    color:var(--text-dark);
+    padding-bottom:40px;
+  }
+  h1{
+    text-align:center;
+    font-size:21px;
+    padding:20px 10px 2px;
+    margin:0;
+  }
+  .subtitle{
+    text-align:center;
+    font-size:14px;
+    color:#666;
+    margin-bottom:16px;
+  }
+  .tabs{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    padding:0 10px 14px;
+    flex-wrap:wrap;
+    position:sticky;
+    top:0;
+    background:#faf8f5;
+    z-index:10;
+    padding-top:8px;
+  }
+  .tab-btn{
+    border:none;
+    border-radius:30px;
+    padding:11px 16px;
+    font-size:14px;
+    font-weight:bold;
+    color:#fff;
+    cursor:pointer;
+    opacity:0.5;
+    transition:opacity .2s;
+  }
+  .tab-btn.active{opacity:1;}
+  .tab-btn[data-zone="president"]{background:var(--orange);}
+  .tab-btn[data-zone="ketagalan"]{background:var(--red);}
+  .tab-btn[data-zone="plaza"]{background:var(--green);}
 
-  /* ---- Tabs（純 CSS radio 切換） ---- */
-  #poTimelineRoot .po-tab-radio { display: none; }
-  #poTimelineRoot .po-tab-bar { display: flex; gap: 10px; margin-bottom: 0; }
-  #poTimelineRoot .po-tab-label {
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    padding: 10px 26px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 15px;
-    opacity: 0.6;
-    transform: scale(0.97);
-    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
-  }
-  #poTimelineRoot .po-tab-label[for="poTab1"] { background: #f2a20c; color: #fff; }
-  #poTimelineRoot .po-tab-label[for="poTab2"] { background: #f6cee0; color: #c14a83; }
-  #poTimelineRoot .po-tab-label[for="poTab3"] { background: #1c8a3a; color: #fff; }
+  .zone{display:none;padding:0 10px;}
+  .zone.active{display:block;}
 
-  #poTimelineRoot .po-panels {
-    margin-top: 5px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
+  .zone-header{
+    color:#fff;
+    padding:14px 16px;
+    border-radius:10px 10px 0 0;
+    font-size:17px;
+    font-weight:bold;
   }
-  #poTimelineRoot .po-panel { display: none; }
-  #poTimelineRoot .po-inner { padding-bottom: 20px; }
+  .zone-header .time{
+    display:block;
+    font-size:14px;
+    font-weight:normal;
+    margin-top:4px;
+    opacity:.95;
+  }
+  #president .zone-header{background:var(--orange);}
+  #ketagalan .zone-header{background:var(--red);}
+  #plaza .zone-header{background:var(--green);}
 
-  #poTab1:checked ~ .po-tab-bar label[for="poTab1"],
-  #poTab2:checked ~ .po-tab-bar label[for="poTab2"],
-  #poTab3:checked ~ .po-tab-bar label[for="poTab3"] {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  .links-box{
+    background:#fff;
+    border-radius:0 0 10px 10px;
+    padding:10px 14px 12px;
+    font-size:12.5px;
+    line-height:1.7;
+    margin-bottom:18px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.08);
   }
-  #poTab1:checked ~ .po-panels #poPanel1,
-  #poTab2:checked ~ .po-panels #poPanel2,
-  #poTab3:checked ~ .po-panels #poPanel3 {
-    display: block;
-  }
+  .links-box b{display:block;margin-bottom:4px;font-size:13px;}
+  .links-box a{color:#1a6fb0;word-break:break-all;}
 
-  /* ---- 單一場地面板 ---- */
-  #poTimelineRoot .po-inner-wrap { width: 100%; }
-  #poTimelineRoot .po-title-bar {
-    color: #fff;
-    text-align: center;
-    font-weight: 700;
-    font-size: 16px;
-    padding: 10px 8px;
-    letter-spacing: 1px;
+  .area-block{
+    margin-bottom:18px;
+    border-radius:0 0 10px 10px;
+    overflow:hidden;
+    box-shadow:0 1px 4px rgba(0,0,0,0.08);
   }
-  #poTimelineRoot .po-sub-bar { height: 10px; }
+  .area-title{
+    padding:10px 14px;
+    font-size:15px;
+    font-weight:bold;
+  }
+  .area-title small{
+    display:block;
+    font-weight:normal;
+    font-size:12.5px;
+    color:#555;
+  }
+  #president .area-title{background:var(--orange-light);}
+  #ketagalan .area-title{background:var(--red-light);}
+  #plaza .area-title{background:var(--green-light);}
 
-  /* ---- 直式清單：每個活動分區一個區塊，區塊內用表格條列「時間／參加方式／活動內容」，
-     取代原本橫向可滑動的時間軸格線，改成上下捲動即可看完全部內容 ---- */
-  #poTimelineRoot .po-sections { padding: 12px 10px 4px; }
-  #poTimelineRoot .po-section {
-    border: 1px solid #eee;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 14px;
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    font-size:13.5px;
   }
-  #poTimelineRoot .po-section:last-child { margin-bottom: 2px; }
+  th,td{
+    padding:9px 7px;
+    text-align:left;
+    border-bottom:1px solid #eee;
+    vertical-align:top;
+  }
+  th{
+    background:#f5f3f0;
+    font-size:12px;
+    color:#666;
+    white-space:nowrap;
+  }
+  td.time{
+    white-space:nowrap;
+    font-weight:bold;
+    width:82px;
+  }
+  td ul{margin:0;padding-left:16px;}
+  td li{margin-bottom:2px;}
+  .badge{
+    display:inline-block;
+    font-size:11px;
+    padding:2px 6px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  .badge.need{background:#DFF3E3;color:#1E7B34;}
+  .badge.free{background:#EDEDED;color:#555;}
+  .badge.closed{background:#F4E1E1;color:#a33;}
+  a.reg{color:#1a6fb0;font-size:12px;word-break:break-all;}
 
-  #poTimelineRoot .po-section-head {
-    color: #fff;
-    padding: 10px 12px 8px;
+  .legend{
+    font-size:12px;
+    color:#777;
+    text-align:center;
+    margin:0 0 16px;
   }
-  #poTimelineRoot .po-section-name { font-weight: 700; font-size: 15px; }
-  #poTimelineRoot .po-section-sub { font-size: 12px; margin-top: 2px; opacity: 0.95; }
-
-  #poTimelineRoot .po-section-tagband {
-    text-align: center;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 5px 10px;
-    letter-spacing: 0.5px;
+  .footer-info{
+    background:#fff;
+    margin:20px 10px 0;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:13px;
+    line-height:1.8;
+    box-shadow:0 1px 4px rgba(0,0,0,0.08);
   }
-
-  /* 全日開放中（無單一時段）的活動：不佔表格的一列，改成區塊標題下方一行說明文字 */
-  #poTimelineRoot .po-section-allday {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    font-size: 11.5px;
-    color: #888;
-    background: #fff;
-    padding: 8px 12px 6px;
-  }
-
-  #poTimelineRoot .po-table { background: #fff; }
-  #poTimelineRoot .po-row {
-    display: grid;
-    grid-template-columns: 88px 78px 1fr;
-    border-top: 1px solid #f2f2f2;
-  }
-  #poTimelineRoot .po-row.po-row-head {
-    background: #fafafa;
-    color: #999;
-    font-size: 11px;
-    font-weight: 700;
-    border-top: none;
-  }
-  #poTimelineRoot .po-cell { padding: 8px 6px; font-size: 12px; line-height: 1.4; }
-  #poTimelineRoot .po-row-head .po-cell { padding: 6px 6px; }
-  #poTimelineRoot .po-cell-time { font-weight: 700; color: #333; font-size: 11.5px; white-space: nowrap; }
-  #poTimelineRoot .po-cell-tags { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-  #poTimelineRoot .po-tag-pill {
-    display: inline-block;
-    max-width: 100%;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    white-space: normal;
-    word-break: break-word;
-    text-align: center;
-    line-height: 1.3;
-  }
-  #poTimelineRoot a.po-tag-pill { text-decoration: underline; cursor: pointer; }
-  #poTimelineRoot .po-cell-content { font-weight: 600; color: #222; }
-  #poTimelineRoot .po-content-sub {
-    display: block;
-    margin-top: 2px;
-    font-size: 10.5px;
-    font-weight: 400;
-    color: #888;
-    line-height: 1.35;
-  }
-
-  #poTimelineRoot .po-note {
-    font-size: 11px; color: #999; margin: 10px 2px 0; line-height: 1.7;
-  }
+  .footer-info b{display:block;margin-bottom:4px;}
 </style>
 </head>
 <body>
 
-<div id="poTimelineRoot">
-  <input type="radio" name="poTab" id="poTab1" class="po-tab-radio" checked>
-  <input type="radio" name="poTab" id="poTab2" class="po-tab-radio">
-  <input type="radio" name="poTab" id="poTab3" class="po-tab-radio">
+<h1>2026 大FUN凱道｜全日活動時刻表</h1>
+<div class="subtitle">09:00-16:00｜三大分區彙整版</div>
 
-  <div class="po-tab-bar" id="poTabBar"></div>
-  <div class="po-panels" id="poPanels"></div>
+<div class="tabs">
+  <button class="tab-btn active" data-zone="president" onclick="showZone('president', this)">總統府</button>
+  <button class="tab-btn" data-zone="ketagalan" onclick="showZone('ketagalan', this)">凱達格蘭大道</button>
+  <button class="tab-btn" data-zone="plaza" onclick="showZone('plaza', this)">北廣場</button>
+</div>
 
-  <p class="po-note" id="poNote"></p>
+<div class="legend">✅ 需報名｜自由入場＝現場開放參加，數量或場次以官網公告為準</div>
+
+<!-- ===================== 一、總統府 ===================== -->
+<div class="zone active" id="president">
+  <div class="zone-header">中華民國總統府<span class="time">09:00-16:00｜南苑・北苑・新聞中心・大禮堂・敞廳</span></div>
+  <div class="links-box">
+    2026「大FUN凱道」首度帶隊開箱總統府！9:00–16:00都是專屬於孩子們的探索時間。<br>
+    <b style="margin-top:8px;">小小探險家專屬快速通道</b>
+    每梯次（09:00、10:00、11:00梯次）只有80個名額的快速通關魔法👉
+    <a href="https://forms.gle/hSTojAUMMZgaFsnNA" target="_blank">點我搭上專屬探險號！</a>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">南苑｜凱風卡瑪閱讀之森<small>閱讀好重要｜09:00-16:00 開放</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th></tr>
+      <tr><td class="time">09:00-16:00</td><td>親子閱讀全區開放中</td></tr>
+      <tr><td class="time">10:30-11:00</td><td>說故事時間：環境部長 彭啓明</td></tr>
+      <tr><td class="time">11:30-12:00</td><td>說故事時間：繪本作家 賴馬 × 陳培瑜</td></tr>
+      <tr><td class="time">12:00-12:30</td><td>說故事時間：親子天下 小行星</td></tr>
+      <tr><td class="time">13:00-13:30</td><td>說故事時間：客委會主委 古秀妃</td></tr>
+      <tr><td class="time">14:00-14:30</td><td>說故事時間：繪本作家 林小杯</td></tr>
+      <tr><td class="time">15:00-15:30</td><td>說故事時間：立法委員陳培瑜</td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">敞廳｜兒童快閃表演<small>兒童快閃表演</small></div>
+    <table>
+      <tr><th>時間</th><th>表演內容</th></tr>
+      <tr><td class="time">10:00</td><td>冠軍幼兒園 中班｜勇敢的山頭（律動）</td></tr>
+      <tr><td class="time">11:00</td><td>金華國小｜有時天晴有時雨（合唱）</td></tr>
+      <tr><td class="time">13:00</td><td>音樂同盟｜如果受了傷（合唱）</td></tr>
+      <tr><td class="time">14:00</td><td>幸安國小合唱團｜你好緊張（合唱）</td></tr>
+      <tr><td class="time">15:00</td><td>士林體操班｜虎姑婆（舞蹈）</td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">北苑｜火柴貓防災大作戰<small>防災好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th></tr>
+      <tr><td class="time">09:00-16:00</td><td>火柴貓防災大作戰（全日固定活動）</td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">大禮堂｜兒童氣候變遷高峰會<small>永續好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr><td class="time">11:00-12:00</td><td>兒童氣候變遷高峰會</td><td>北廣場直播</td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">大禮堂｜親子電影院 × 兒童電音派對<small>放電好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr>
+        <td class="time">13:30-14:50</td>
+        <td>親子電影院：
+          <ul>
+            <li>登山總動員：男子漢的百岳比賽</li>
+            <li>我的小樹超人</li>
+            <li>悄悄話：好朋友的秘密</li>
+            <li>你吹do我吹si</li>
+          </ul>
+        </td>
+        <td><span class="badge need">✅ 需報名</span><br><a class="reg" href="https://forms.gle/yTxrZtiki1HcFWQc9" target="_blank">報名連結</a></td>
+      </tr>
+      <tr><td class="time">15:00-15:30</td><td>兒童電音派對</td><td>—</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 二、凱達格蘭大道 ===================== -->
+<div class="zone" id="ketagalan">
+  <div class="zone-header">凱達格蘭大道（公園路至重慶南路段）<span class="time">10:00-16:00｜氣候變遷小學堂・我的街道我來設計・全民運動基地・自由遊戲基地</span></div>
+  <div class="links-box">整條大道 10:00-16:00 全日開放、自由入場；各站點另有限定場次工作坊／活動，需事先報名。</div>
+
+  <div class="area-block">
+    <div class="area-title">氣候變遷小學堂<small>氣候好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>氣候變遷小學堂，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+      <tr><td class="time">14:00-15:00</td><td>氣候變遷 × 山林戶外講座</td><td><span class="badge need">✅ 需報名</span></td><td><a class="reg" href="https://www.accupass.com/go/POWFUN" target="_blank">報名連結</a></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">我的街道我來設計<small>移動好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>我的街道我來設計，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+      <tr><td class="time">10:00-11:00</td><td>硬派卡兒本交通培力工作坊①</td><td><span class="badge need">✅ 需報名</span></td><td rowspan="2"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank">報名連結</a></td></tr>
+      <tr><td class="time">11:20-12:20</td><td>硬派卡兒本交通培力工作坊②</td><td><span class="badge need">✅ 需報名</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">全民運動基地<small>跑跳好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>全民運動基地該區，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+      <tr><td class="time">10:00-11:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td><td rowspan="6"><a class="reg" href="https://www.accupass.com/eflow/ticket/2608171350291688481293" target="_blank">報名連結</a></td></tr>
+      <tr><td class="time">11:00-12:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+      <tr><td class="time">12:00-13:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+      <tr><td class="time">13:00-14:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+      <tr><td class="time">14:00-15:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+      <tr><td class="time">15:00-16:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">自由遊戲基地<small>跑跳好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>自由遊戲基地，全日開放，無特定場次</td><td><span class="badge free">自由入場</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 三、北廣場 ===================== -->
+<div class="zone" id="plaza">
+  <div class="zone-header">總統府北廣場<span class="time">10:00-16:00｜舞台區・客庄市場好好玩・行動攝影棚・小老闆市集・資源循環維修棧・電力補給站</span></div>
+
+  <div class="area-block">
+    <div class="area-title">舞台區<small>舞台區</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr><td class="time">10:00-11:00</td><td>天馬戲創作劇團</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">11:00-12:30</td><td>兒童氣候變遷高峰會直播</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">12:30-13:05</td><td>momo mini 親子電影院－我愛地球
+        <ul><li>小豬電力公司</li><li>Yim and Yoyo</li></ul>
+      </td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">13:15-14:00</td><td>momo mini 親子電影院－我愛足球
+        <ul><li>6 Tips How To Become The Best Football Player Of The World</li><li>搶救髒皮鞋</li><li>自然捲</li></ul>
+      </td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">14:05-14:40</td><td>momo mini 親子電影院－我愛食物
+        <ul><li>粉紅星際大餐</li><li>貓大廚煲湯</li><li>莉娜的歡樂農場－最特別的一餐</li><li>Go!蔬菜小隊</li></ul>
+      </td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">14:45-15:15</td><td>momo mini 親子電影院－我愛繪本
+        <ul><li>超級蟲蟲</li></ul>
+      </td><td>—</td></tr>
+      <tr><td class="time">15:20-16:00</td><td>學學嘴學學鼻</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">16:00-16:20</td><td>兒童電音派對</td><td><span class="badge free">自由入場</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">客庄市場好好玩<small>飲食好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
+      <tr><td class="time">10:30-12:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td><td rowspan="3"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank">報名連結</a></td></tr>
+      <tr><td class="time">12:30-14:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
+      <tr><td class="time">14:30-16:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">行動攝影棚<small>媒體好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>行動攝影棚（全日開放）</td><td><span class="badge free">自由入場</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">小老闆市集<small>珍惜好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>備註</th><th>連結</th></tr>
+      <tr><td class="time">即日起</td><td>小老闆市集招募</td><td>小老闆招募中</td><td><a class="reg" href="https://bit.ly/4wI7olX" target="_blank">報名連結</a></td></tr>
+      <tr><td class="time">10:00-12:30</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+      <tr><td class="time">13:30-16:00</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">資源循環維修棧<small>珍惜好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr><td class="time">全日開放</td><td>玩具拆裝體驗／廢木材再利用／光的再造工作坊，全日開放</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">10:30-12:30</td><td>小小維修師傅－電風扇保養實作</td><td><span class="badge free">自由入場</span></td></tr>
+      <tr><td class="time">13:30-15:30</td><td>小小維修師傅－電風扇保養實作</td><td><span class="badge free">自由入場</span></td></tr>
+    </table>
+  </div>
+
+  <div class="area-block">
+    <div class="area-title">電力補給站<small>發電好重要</small></div>
+    <table>
+      <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
+      <tr><td class="time">10:00-16:00</td><td>電力補給站</td><td><span class="badge free">自由入場</span></td></tr>
+    </table>
+  </div>
 </div>
 
 <script>
-(function () {
-  // ============================================================
-  // 資料來源：2026 大FUN凱道 全日活動時刻表（09:00-17:00）｜三大分區彙整版 PDF
-  // 在這裡編輯即可自動重新渲染整個頁面
-  // start/end: "HH:MM"
-  // type: "solid"（實心整塊，用於全日單一活動）／"light"（淺底＋左側色條，預設）／"background"（全欄淡色底，用於「全日開放中」這類無明確單一時段的說明，不佔用並排欄位）
-  // tag: 右上角小標籤，可加 emoji；若同時提供 link，標籤本身會變成可點擊連結
-  // link: 報名／詳情網址（選填，對應 tag）
-  // tags: 想同時顯示「多個」標籤時使用，陣列，每個項目可以是純文字，
-  //       或 {text:"...", link:"..."} 讓該標籤本身也能點擊連結；
-  //       會接在 tag 後面，同一行並排顯示，放不下會自動換行
-  //       例：tag:"✅ 需報名", link:"https://...", tags:["可自由參加"]
-  // lines: 補充說明（陣列，會以「、」合併成一行顯示，選填）
-  // ============================================================
-  var venuesData = [
-    {
-      id: "poPanel1",
-      tabId: "poTab1",
-      tabLabel: "總統府",
-      venueName: "中華民國總統府",
-      dayStart: "09:00",
-      dayEnd: "16:00",
-      titleColor: "#f2a20c",
-      headerStyle: "plain",
-      showSubBar: true,
-      pxPerHour: 165,
-      columns: [
-        {
-          name: "南苑", color: "#f2a20c",
-          subtitle: "凱風卡瑪閱讀之森", tag: "閱讀好重要",
-          events: [
-            { start: "09:00", end: "16:00", title: "親子閱讀全區開放中", type: "background" },
-            { start: "10:30", end: "11:00", title: "說故事時間：環境部長 彭啓明" , type: "solid"},
-            { start: "11:30", end: "12:00", title: "說故事時間：繪本作家 賴馬 × 陳培瑜" , type: "solid"},
-            { start: "12:00", end: "12:30", title: "說故事時間：親子天下 小行星" , type: "solid"},
-            { start: "13:00", end: "13:30", title: "說故事時間：客委會主委 古秀妃" , type: "solid"},
-            { start: "14:00", end: "14:30", title: "說故事時間：繪本作家 林小杯" , type: "solid"},
-            { start: "15:00", end: "15:30", title: "說故事時間：立法委員陳培瑜" , type: "solid"}
-          ]
-        },
-        {
-          name: "北苑", color: "#f2a20c",
-          subtitle: "火柴貓防災大作戰", tag: "防災好重要",
-          events: [
-            { start: "09:00", end: "16:00", title: "火柴貓防災大作戰，全日開放中", type: "background" }
-          ]
-        },
-        {
-          name: "新聞中心", color: "#f2a20c",
-          subtitle: "今天遇見誰", tag: "好奇好重要",
-          events: [
-            { start: "09:00", end: "16:00", title: "今天遇見誰，全日開放中", type: "background", tag: "🔒 事前甄選．已截止" }
-          ]
-        },
-        {
-          name: "大禮堂", color: "#f2a20c",
-          subtitle: "兒童氣候變遷高峰會 × 親子電影院", tag: "永續好重要．放電好重要",
-          events: [
-            { start: "11:00", end: "12:00", title: "兒童氣候變遷高峰會", tag: "📡 北廣場同步直播" , type: "solid"},
-            {
-              start: "13:30", end: "14:50", title: "親子電影院", tag: "✅ 需報名",
-              link: "https://forms.gle/yTxrZtiki1HcFWQc9",
-              lines: ["登山總動員：男子漢的百岳比賽", "我的小樹超人", "悄悄話：好朋友的秘密", "你吹do我吹si"], type: "solid"
-            },
-            { start: "15:00", end: "15:30", title: "兒童電音派對" , type: "solid"}
-          ]
-        },
-        {
-          name: "敞廳", color: "#f2a20c",
-          subtitle: "兒童快閃表演", tag: "",
-          events: [
-            { start: "10:00", end: "10:30", title: "冠軍幼兒園 中班｜勇敢的山頭 律動" , type: "solid"},
-            { start: "11:00", end: "11:30", title: "金華國小｜有時天晴有時雨 合唱" , type: "solid"},
-            { start: "13:00", end: "13:30", title: "音樂同盟｜如果受了傷 合唱" , type: "solid"},
-            { start: "14:00", end: "14:30", title: "幸安國小合唱團｜你好緊張 合唱" , type: "solid"},
-            { start: "15:00", end: "15:30", title: "士林體操班｜虎姑婆 舞蹈" , type: "solid"}
-          ]
-        }
-      ]
-    },
-    {
-      id: "poPanel2",
-      tabId: "poTab2",
-      tabLabel: "凱達格蘭大道",
-      venueName: "凱達格蘭大道（公園路至重慶南路段）",
-      dayStart: "10:00",
-      dayEnd: "16:00",
-      titleColor: "#d1668f",
-      headerStyle: "plain",
-      showSubBar: true,
-      pxPerHour: 125,
-      columns: [
-        {
-          name: "氣候變遷小學堂", color: "#d1668f", tag: "氣候好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "氣候變遷小學堂，全日開放中", type: "background" },
-            { start: "14:00", end: "15:00", title: "氣候變遷 × 山林戶外講座", tag: "✅ 需報名", link: "https://www.accupass.com/go/POWFUN", type: "solid" }
-          ]
-        },
-        {
-          name: "我的街道我來設計", color: "#d1668f", tag: "移動好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "我的街道我來設計，全日開放中", type: "background" },
-            { start: "10:00", end: "11:00", title: "硬派卡兒本交通培力工作坊①", tag: "✅ 需報名", link: "https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform", type: "solid" },
-            { start: "11:20", end: "12:20", title: "硬派卡兒本交通培力工作坊②", tag: "✅ 需報名", link: "https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform", type: "solid" }
-          ]
-        },
-        {
-          name: "全民運動基地", color: "#d1668f", tag: "跑跳好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "全民運動基地該區，全日開放中", type: "background" },
-            { start: "10:00", end: "11:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" },
-            { start: "11:00", end: "12:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" },
-            { start: "12:00", end: "13:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" },
-            { start: "13:00", end: "14:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" },
-            { start: "14:00", end: "15:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" },
-            { start: "15:00", end: "16:00", title: "地板滾球／拳擊／籃球／布袋球", tag: "✅ 需報名", link: "https://www.accupass.com/eflow/ticket/2608171350291688481293", tags: ["可自由參加"], type: "solid" }
-          ]
-        },
-        {
-          name: "自由遊戲基地", color: "#d1668f", tag: "跑跳好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "自由遊戲基地，全日開放中", type: "background"}
-          ]
-        }
-      ]
-    },
-    {
-      id: "poPanel3",
-      tabId: "poTab3",
-      tabLabel: "北廣場",
-      venueName: "北廣場",
-      dayStart: "10:00",
-      dayEnd: "16:20",
-      // 標題列顯示用的結束時間：舞台區最後一場「兒童電音派對」到 16:20 才結束，
-      // 時間軸／欄位高度仍然要以 dayEnd(16:20) 計算，只有標題列文字改顯示 16:00
-      displayDayEnd: "16:00",
-      titleColor: "#1c8a3a",
-      headerStyle: "plain",
-      showSubBar: true,
-      pxPerHour: 225,
-      columns: [
-        {
-          name: "舞台區", color: "#1c8a3a", tag: "",
-          events: [
-            { start: "10:00", end: "11:00", title: "天馬戲創作劇團", type: "solid" },
-            { start: "11:00", end: "12:30", title: "兒童氣候變遷高峰會直播", type: "solid" },
-            { start: "12:30", end: "13:05", title: "momo mini 親子電影院－我愛地球", lines: ["小豬電力公司", "Yim and Yoyo"], type: "solid" },
-            { start: "13:15", end: "14:00", title: "momo mini 親子電影院－我愛足球", lines: ["6 Tips How To Become The Best Football Player Of The World", "搶救髒皮鞋", "自然捲"], type: "solid" },
-            { start: "14:05", end: "14:40", title: "momo mini 親子電影院－我愛食物", lines: ["粉紅星際大餐", "貓大廚煲湯", "莉娜的歡樂農場－最特別的一餐", "Go!蔬菜小隊"], type: "solid" },
-            { start: "14:45", end: "15:15", title: "momo mini 親子電影院－我愛繪本", lines: ["超級蟲蟲"], type: "solid" },
-            { start: "15:20", end: "16:00", title: "學學嘴學學鼻", type: "solid" },
-            { start: "16:00", end: "16:20", title: "兒童電音派對", type: "solid" }
-          ]
-        },
-        {
-          name: "客庄市場好好玩", color: "#1c8a3a", tag: "飲食好重要",
-          events: [
-            { start: "10:30", end: "12:00", title: "客庄兒童市場開市", tag: "✅ 需報名", link: "https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform", lines: ["線上報名＋現場開放10名"], type: "solid" },
-            { start: "12:30", end: "14:00", title: "客庄兒童市場開市", tag: "✅ 需報名", link: "https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform", lines: ["線上報名＋現場開放10名"], type: "solid" },
-            { start: "14:30", end: "16:00", title: "客庄兒童市場開市", tag: "✅ 需報名", link: "https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform", lines: ["線上報名＋現場開放10名"], type: "solid" }
-          ]
-        },
-        {
-          name: "行動攝影棚", color: "#1c8a3a", tag: "媒體好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "行動攝影棚，全日開放中", type: "background"}
-          ]
-        },
-        {
-          name: "小老闆市集", color: "#1c8a3a", tag: "珍惜好重要",
-          events: [
-            { start: "10:00", end: "12:30", title: "小老闆市集", type: "solid" },
-            { start: "13:30", end: "16:00", title: "小老闆市集", type: "solid" }
-          ]
-        },
-        {
-          name: "資源循環維修棧", color: "#1c8a3a", tag: "珍惜好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "玩具拆裝體驗／廢木材再利用／光的再造工作坊，全日開放", type: "background" },
-            { start: "10:30", end: "12:30", title: "小小維修師傅－電風扇保養實作", type: "solid" },
-            { start: "13:30", end: "15:30", title: "小小維修師傅－電風扇保養實作", type: "solid" }
-          ]
-        },
-        {
-          name: "電力補給站", color: "#1c8a3a", tag: "發電好重要",
-          events: [
-            { start: "10:00", end: "16:00", title: "電力補給站，全日開放中", type: "background"}
-          ]
-        }
-      ]
-    }
-  ];
-
-  var NOTE_HTML = "";
-
-  // ============================================================
-  var PX_PER_HOUR_DEFAULT = 108;
-
-  function toMinutes(hhmm) {
-    var p = hhmm.split(":").map(Number);
-    return p[0] * 60 + p[1];
-  }
-  function fmtRange(s, e) { return s + "–" + e; }
-  function hexToRgba(hex, alpha) {
-    var h = hex.replace("#", "");
-    if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
-    var r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
-    return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
-  }
-  // 不透明的淺色調（把顏色和白色混合成實色），避免半透明底色讓時間軸的小時刻度線穿透文字
-  function hexToOpaqueTint(hex, ratio) {
-    var h = hex.replace("#", "");
-    if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
-    var r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
-    var mix = function (c) { return Math.round(c * ratio + 255 * (1 - ratio)); };
-    return "rgb(" + mix(r) + "," + mix(g) + "," + mix(b) + ")";
-  }
-  function el(tag, className, text) {
-    var e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-  }
-
-  // 把 tag（單一）＋ tags（陣列，可多個）合併成統一的清單，
-  // 每個項目是 {text, link?}，link 存在時該標籤本身會是可點擊連結
-  function collectTags(ev) {
-    var tagList = [];
-    if (ev.tag) tagList.push({ text: ev.tag, link: ev.link });
-    if (ev.tags && ev.tags.length) {
-      ev.tags.forEach(function (t) {
-        if (typeof t === "string") tagList.push({ text: t });
-        else tagList.push(t);
-      });
-    }
-    return tagList;
-  }
-
-  function buildTagPill(t, tint, themeColor) {
-    var pill = t.link ? document.createElement("a") : document.createElement("div");
-    pill.className = "po-tag-pill";
-    if (t.link) {
-      pill.href = t.link;
-      pill.target = "_blank";
-      pill.rel = "noopener noreferrer";
-    }
-    pill.textContent = t.text;
-    pill.style.background = tint;
-    pill.style.color = themeColor;
-    return pill;
-  }
-
-  function buildEventRow(ev, col, tint) {
-    var row = el("div", "po-row");
-    row.appendChild(el("div", "po-cell po-cell-time", fmtRange(ev.start, ev.end)));
-
-    var tagsCell = el("div", "po-cell po-cell-tags");
-    collectTags(ev).forEach(function (t) {
-      tagsCell.appendChild(buildTagPill(t, tint, col.color));
-    });
-    row.appendChild(tagsCell);
-
-    var contentCell = el("div", "po-cell po-cell-content");
-    contentCell.appendChild(document.createTextNode(ev.title));
-    if (ev.lines && ev.lines.length) {
-      contentCell.appendChild(el("span", "po-content-sub", ev.lines.join("、")));
-    }
-    row.appendChild(contentCell);
-
-    return row;
-  }
-
-  // 每個活動分區（原本時間軸的一欄）現在變成一個直式區塊：
-  // 區塊標題（分區名稱＋副標）→ tag 色帶 → 全日開放中的說明行 → 有明確時段的活動改用表格條列
-  function buildSection(col) {
-    var section = el("div", "po-section");
-
-    var head = el("div", "po-section-head");
-    head.style.background = col.color;
-    head.appendChild(el("div", "po-section-name", col.name));
-    if (col.subtitle) head.appendChild(el("div", "po-section-sub", col.subtitle));
-    section.appendChild(head);
-
-    var tint = hexToOpaqueTint(col.color, 0.12);
-    if (col.tag) {
-      var tagband = el("div", "po-section-tagband", col.tag);
-      tagband.style.background = tint;
-      tagband.style.color = col.color;
-      section.appendChild(tagband);
-    }
-
-    var backgrounds = col.events.filter(function (e) { return e.type === "background"; });
-    var normal = col.events.filter(function (e) { return e.type !== "background"; })
-      .slice()
-      .sort(function (a, b) { return toMinutes(a.start) - toMinutes(b.start); });
-
-    // 全日開放中：沒有單一時段可以放進表格，改在區塊標題下方顯示一行說明文字
-    backgrounds.forEach(function (ev) {
-      var line = el("div", "po-section-allday");
-      line.appendChild(document.createTextNode(fmtRange(ev.start, ev.end) + " " + ev.title));
-      collectTags(ev).forEach(function (t) {
-        line.appendChild(buildTagPill(t, tint, col.color));
-      });
-      section.appendChild(line);
-    });
-
-    if (normal.length) {
-      var table = el("div", "po-table");
-      var headRow = el("div", "po-row po-row-head");
-      headRow.appendChild(el("div", "po-cell", "時間"));
-      headRow.appendChild(el("div", "po-cell", "參加方式"));
-      headRow.appendChild(el("div", "po-cell", "活動內容"));
-      table.appendChild(headRow);
-      normal.forEach(function (ev) {
-        table.appendChild(buildEventRow(ev, col, tint));
-      });
-      section.appendChild(table);
-    }
-
-    return section;
-  }
-
-  function buildPanel(venue) {
-    var panel = el("div", "po-panel");
-    panel.id = venue.id;
-
-    var inner = el("div", "po-inner");
-
-    // 標題列文字可用 displayDayEnd 覆蓋顯示用的結束時間（例如活動 16:20 才結束，
-    // 但想顯示成 16:00），實際資料的 dayEnd 只用來當作 fallback，兩者互不影響
-    var displayDayEnd = venue.displayDayEnd || venue.dayEnd;
-    var titleBar = el("div", "po-title-bar", venue.venueName + " ｜ " + venue.dayStart + "-" + displayDayEnd);
-    titleBar.style.background = venue.titleColor;
-    inner.appendChild(titleBar);
-
-    if (venue.showSubBar) {
-      var subBar = el("div", "po-sub-bar");
-      subBar.style.background = venue.titleColor;
-      inner.appendChild(subBar);
-    }
-
-    var sections = el("div", "po-sections");
-    venue.columns.forEach(function (col) {
-      sections.appendChild(buildSection(col));
-    });
-    inner.appendChild(sections);
-
-    panel.appendChild(inner);
-    return panel;
-  }
-
-  function build() {
-    var tabBar = document.getElementById("poTabBar");
-    var panels = document.getElementById("poPanels");
-    venuesData.forEach(function (venue) {
-      var label = document.createElement("label");
-      label.className = "po-tab-label";
-      label.setAttribute("for", venue.tabId);
-      label.textContent = venue.tabLabel;
-      tabBar.appendChild(label);
-      panels.appendChild(buildPanel(venue));
-    });
-  }
-
-  build();
-})();
+function showZone(zone, btn){
+  document.querySelectorAll('.zone').forEach(z => z.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(zone).classList.add('active');
+  btn.classList.add('active');
+}
 </script>
 
 </body>
