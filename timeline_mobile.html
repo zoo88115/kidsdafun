@@ -116,8 +116,20 @@
   #ketagalan .area-title{background:var(--red-light);}
   #plaza .area-title{background:var(--green-light);}
 
+  /* 表格改成可以左右滑動：外層 .table-scroll 負責橫向捲動，
+     table 本身給一個最小寬度，欄位才不會被硬擠成過窄、文字亂折行，
+     手機寬度不夠時就用滑的，而不是把每一欄都壓得很窄 */
+  .table-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .table-scroll::-webkit-scrollbar{ height:6px; }
+  .table-scroll::-webkit-scrollbar-track{ background:#f0ece6; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:#cbb999; border-radius:999px; }
+
   table{
     width:100%;
+    min-width:560px;
     border-collapse:collapse;
     background:#fff;
     font-size:13.5px;
@@ -195,6 +207,7 @@
 
   <div class="area-block">
     <div class="area-title">南苑｜凱風卡瑪閱讀之森<small>閱讀好重要｜09:00-16:00 開放</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th></tr>
       <tr><td class="time">09:00-16:00</td><td>親子閱讀全區開放中</td></tr>
@@ -205,10 +218,12 @@
       <tr><td class="time">14:00-14:30</td><td>說故事時間：繪本作家 林小杯</td></tr>
       <tr><td class="time">15:00-15:30</td><td>說故事時間：立法委員陳培瑜</td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">敞廳｜兒童快閃表演<small>兒童快閃表演</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>表演內容</th></tr>
       <tr><td class="time">10:00</td><td>冠軍幼兒園 中班｜勇敢的山頭（律動）</td></tr>
@@ -217,26 +232,32 @@
       <tr><td class="time">14:00</td><td>幸安國小合唱團｜你好緊張（合唱）</td></tr>
       <tr><td class="time">15:00</td><td>士林體操班｜虎姑婆（舞蹈）</td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">北苑｜火柴貓防災大作戰<small>防災好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th></tr>
       <tr><td class="time">09:00-16:00</td><td>火柴貓防災大作戰（全日固定活動）</td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">大禮堂｜兒童氣候變遷高峰會<small>永續好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">11:00-12:00</td><td>兒童氣候變遷高峰會</td><td>北廣場直播</td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">大禮堂｜親子電影院 × 兒童電音派對<small>放電好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr>
@@ -253,6 +274,7 @@
       </tr>
       <tr><td class="time">15:00-15:30</td><td>兒童電音派對</td><td>—</td></tr>
     </table>
+    </div>
   </div>
 </div>
 
@@ -263,25 +285,30 @@
 
   <div class="area-block">
     <div class="area-title">氣候變遷小學堂<small>氣候好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
       <tr><td class="time">10:00-16:00</td><td>氣候變遷小學堂，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
       <tr><td class="time">14:00-15:00</td><td>氣候變遷 × 山林戶外講座</td><td><span class="badge need">✅ 需報名</span></td><td><a class="reg" href="https://www.accupass.com/go/POWFUN" target="_blank">報名連結</a></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">我的街道我來設計<small>移動好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
       <tr><td class="time">10:00-16:00</td><td>我的街道我來設計，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
       <tr><td class="time">10:00-11:00</td><td>硬派卡兒本交通培力工作坊①</td><td><span class="badge need">✅ 需報名</span></td><td rowspan="2"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSdAkPOIlroP4SOenR69HFN6XLN8zEC25IwGRmqOdGjyYMlL6A/viewform" target="_blank">報名連結</a></td></tr>
       <tr><td class="time">11:20-12:20</td><td>硬派卡兒本交通培力工作坊②</td><td><span class="badge need">✅ 需報名</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">全民運動基地<small>跑跳好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
       <tr><td class="time">10:00-16:00</td><td>全民運動基地該區，全日開放中</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
@@ -292,14 +319,17 @@
       <tr><td class="time">14:00-15:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
       <tr><td class="time">15:00-16:00</td><td>地板滾球／拳擊／籃球／布袋球</td><td><span class="badge need">✅ 需報名</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">自由遊戲基地<small>跑跳好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>是否需報名</th></tr>
       <tr><td class="time">10:00-16:00</td><td>自由遊戲基地，全日開放，無特定場次</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
+    </div>
   </div>
 </div>
 
@@ -309,6 +339,7 @@
 
   <div class="area-block">
     <div class="area-title">舞台區<small>舞台區</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">10:00-11:00</td><td>天馬戲創作劇團</td><td><span class="badge free">自由入場</span></td></tr>
@@ -328,52 +359,63 @@
       <tr><td class="time">15:20-16:00</td><td>學學嘴學學鼻</td><td><span class="badge free">自由入場</span></td></tr>
       <tr><td class="time">16:00-16:20</td><td>兒童電音派對</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">客庄市場好好玩<small>飲食好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>是否需報名</th><th>連結</th></tr>
       <tr><td class="time">10:30-12:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td><td rowspan="3"><a class="reg" href="https://docs.google.com/forms/d/e/1FAIpQLSfDnMAVI0-FJWTP0XcDOkhzGedJcrP5O7imad_VePlW2myKeg/viewform" target="_blank">報名連結</a></td></tr>
       <tr><td class="time">12:30-14:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
       <tr><td class="time">14:30-16:00</td><td>客庄兒童市場開市</td><td><span class="badge need">✅ 線上報名＋現場開放10名</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">行動攝影棚<small>媒體好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">10:00-16:00</td><td>行動攝影棚（全日開放）</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">小老闆市集<small>珍惜好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>備註</th><th>連結</th></tr>
       <tr><td class="time">即日起</td><td>小老闆市集招募</td><td>小老闆招募中</td><td><a class="reg" href="https://bit.ly/4wI7olX" target="_blank">報名連結</a></td></tr>
       <tr><td class="time">10:00-12:30</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
       <tr><td class="time">13:30-16:00</td><td>小老闆市集</td><td><span class="badge free">自由入場</span></td><td>—</td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">資源循環維修棧<small>珍惜好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">全日開放</td><td>玩具拆裝體驗／廢木材再利用／光的再造工作坊，全日開放</td><td><span class="badge free">自由入場</span></td></tr>
       <tr><td class="time">10:30-12:30</td><td>小小維修師傅－電風扇保養實作</td><td><span class="badge free">自由入場</span></td></tr>
       <tr><td class="time">13:30-15:30</td><td>小小維修師傅－電風扇保養實作</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
+    </div>
   </div>
 
   <div class="area-block">
     <div class="area-title">電力補給站<small>發電好重要</small></div>
+    <div class="table-scroll">
     <table>
       <tr><th>時間</th><th>活動內容</th><th>入場方式</th></tr>
       <tr><td class="time">10:00-16:00</td><td>電力補給站</td><td><span class="badge free">自由入場</span></td></tr>
     </table>
+    </div>
   </div>
 </div>
 
